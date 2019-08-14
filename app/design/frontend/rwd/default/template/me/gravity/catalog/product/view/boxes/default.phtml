@@ -51,7 +51,7 @@
             numberLimit: <?php echo $this->getRecommendationLimit() ?>,
             storeId: <?php echo $storeId ?>,
             <?php if($productId = $this->getProduct()->getId()) : ?>
-                currentItemId: "ItemID_<?php echo $productId ?>",
+                currentItemId: "<?php echo $productId ?>",
              <?php endif; ?>
             resultNames: ["itemId", "title_<?php echo $storeId ?>", "link_<?php echo $storeId ?>", "image_link_<?php echo $storeId ?>"],
             templating: {

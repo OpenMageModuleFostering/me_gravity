@@ -76,6 +76,7 @@ class Me_Gravity_Model_Products extends Me_Gravity_Model_Export_Catalog_Product
         $defaultStoreId = Mage::app()->getDefaultStoreView()->getId();
         $defaultCurrency = Mage::app()->getDefaultStoreView()->getBaseCurrencyCode();
         $directoryHelper = Mage::helper('directory');
+        $isDescriptionEnabled = $this->_helper->isDescriptionExportEnabled();
 
         foreach ($stores as $store) {
 
@@ -91,10 +92,13 @@ class Me_Gravity_Model_Products extends Me_Gravity_Model_Export_Catalog_Product
                     }
 
                     $this->_items[$product->getId()][$store->getId()]['title'] = htmlspecialchars($product->getName());
-                    $this->_items[$product->getId()][$store->getId()]['hidden'] = ($product->getVisibility() == Mage_Catalog_Model_Product_Visibility::VISIBILITY_NOT_VISIBLE) ? 'true' : 'false';
+                    $this->_items[$product->getId()][$store->getId()]['hidden'] = $product->getVisibility();
+                    $this->_items[$product->getId()][$store->getId()]['status'] = ($product->getStatus() == Mage_Catalog_Model_Product_Status::STATUS_ENABLED) ? 'true' : 'false';
                     $this->_items[$product->getId()][$store->getId()]['link'] = htmlspecialchars($baseUrl . $product->getUrlPath());
                     $this->_items[$product->getId()][$store->getId()]['image_link'] = htmlspecialchars($this->_getCatalogBaseMediaUrl() . $product->getImage());
-                    $this->_items[$product->getId()][$store->getId()]['description'] = htmlspecialchars($product->getDescription(), ENT_COMPAT | ENT_DISALLOWED, 'UTF-8', false);
+                    if ($isDescriptionEnabled) {
+                        $this->_items[$product->getId()][$store->getId()]['description'] = htmlspecialchars($product->getDescription(), ENT_COMPAT | ENT_DISALLOWED, 'UTF-8', true);
+                    }
                     if ($store->getId() == $defaultStoreId) {
                         $this->_items[$product->getId()][$store->getId()]['price'] = $product->getFinalPrice();
                     } else {
@@ -114,7 +118,10 @@ class Me_Gravity_Model_Products extends Me_Gravity_Model_Export_Catalog_Product
 
             foreach ($this->_items as $productId => $storeItem) {
 
-                $io->streamWrite($this->_createItemXml($storeItem, $productId));
+                $itemRow = $this->_createItemXml($storeItem, $productId, $isDescriptionEnabled);
+                if ($itemRow) {
+                    $io->streamWrite($itemRow);
+                }
 
             }
 
@@ -130,11 +137,12 @@ class Me_Gravity_Model_Products extends Me_Gravity_Model_Export_Catalog_Product
     /**
      * Get item xml
      *
-     * @param array $storeItems items
-     * @param int   $productId  product Id
-     * @return string
+     * @param array $storeItems           items
+     * @param int   $productId            product Id
+     * @param bool  $isDescriptionEnabled description enabled
+     * @return string|bool
      */
-    protected function _createItemXml($storeItems = array(), $productId = 0)
+    protected function _createItemXml($storeItems = array(), $productId = 0, $isDescriptionEnabled = false)
     {
         $itemXml = '';
         $defaultTitle = '';
@@ -143,7 +151,8 @@ class Me_Gravity_Model_Products extends Me_Gravity_Model_Export_Catalog_Product
             $defaultTitle = $storeItems['default_title'];
             unset($storeItems['default_title']);
         } else {
-            Mage::throwException('Invalid default title in catalog export.');
+            $this->_helper->getLogger('Invalid default title. Product Id: ' . $productId);
+            return false;
         }
 
         // add fix elements
@@ -155,19 +164,36 @@ class Me_Gravity_Model_Products extends Me_Gravity_Model_Export_Catalog_Product
         // add store elements
         foreach ($storeItems as $storeId => $item) {
 
-            $itemXml .= sprintf(
-                '<title_' . $storeId . '>%s</title_' . $storeId . '><currency_' . $storeId . '>%s</currency_' . $storeId . '><c:hidden_' . $storeId . '>%s</c:hidden_' . $storeId . '><link_' . $storeId . '>%s</link_' . $storeId . '><g:image_link_' . $storeId . '>%s</g:image_link_' . $storeId . '><c:description_' . $storeId . '>%s</c:description_' . $storeId . '><g:price_' . $storeId . '>%.4f</g:price_' . $storeId . '>%s%s%s',
-                $item['title'],
-                $item['currency'],
-                $item['hidden'],
-                $item['link'],
-                $item['image_link'],
-                $item['description'],
-                $item['price'],
-                $this->_getCategoryXml($item, $storeId),
-                $this->_getCategoryIdsXml($item, $storeId),
-                $this->_getAttributesXml($item, $storeId)
-            );
+            if ($isDescriptionEnabled) {
+                $itemXml .= sprintf(
+                    '<title_' . $storeId . '><![CDATA[%s]]></title_' . $storeId . '><currency_' . $storeId . '>%s</currency_' . $storeId . '>%s<status_' . $storeId . '>%s</status_' . $storeId . '><link_' . $storeId . '>%s</link_' . $storeId . '><g:image_link_' . $storeId . '>%s</g:image_link_' . $storeId . '><c:description_' . $storeId . '><![CDATA[%s]]></c:description_' . $storeId . '><g:price_' . $storeId . '>%.4f</g:price_' . $storeId . '>%s%s%s',
+                    $item['title'],
+                    $item['currency'],
+                    $this->_getVisibilityElements($item['hidden'], $storeId),
+                    $item['status'],
+                    $item['link'],
+                    $item['image_link'],
+                    $item['description'],
+                    $item['price'],
+                    $this->_getCategoryXml($item, $storeId),
+                    $this->_getCategoryIdsXml($item, $storeId),
+                    $this->_getAttributesXml($item, $storeId)
+                );
+            } else {
+                $itemXml .= sprintf(
+                    '<title_' . $storeId . '><![CDATA[%s]]></title_' . $storeId . '><currency_' . $storeId . '>%s</currency_' . $storeId . '>%s<status_' . $storeId . '>%s</status_' . $storeId . '><link_' . $storeId . '>%s</link_' . $storeId . '><g:image_link_' . $storeId . '>%s</g:image_link_' . $storeId . '><g:price_' . $storeId . '>%.4f</g:price_' . $storeId . '>%s%s%s',
+                    $item['title'],
+                    $item['currency'],
+                    $this->_getVisibilityElements($item['hidden'], $storeId),
+                    $item['status'],
+                    $item['link'],
+                    $item['image_link'],
+                    $item['price'],
+                    $this->_getCategoryXml($item, $storeId),
+                    $this->_getCategoryIdsXml($item, $storeId),
+                    $this->_getAttributesXml($item, $storeId)
+                );
+            }
 
         }
 
@@ -188,12 +214,41 @@ class Me_Gravity_Model_Products extends Me_Gravity_Model_Export_Catalog_Product
         $fixXml = '';
 
         $fixXml .= sprintf(
-            '<g:id>%s</g:id><title>%s</title>',
+            '<g:id>%s</g:id><title><![CDATA[%s]]></title>',
             $productId,
             $title
         );
 
         return $fixXml;
+    }
+
+    /**
+     * Get hidden xml element
+     *
+     * @param int $visibility visibility
+     * @param int $storeId    store Id
+     * @return string
+     */
+    protected function _getVisibilityElements($visibility = 0, $storeId = 0)
+    {
+        $visibilityXml = '';
+
+        switch ($visibility) {
+            case Mage_Catalog_Model_Product_Visibility::VISIBILITY_NOT_VISIBLE:
+                $visibilityXml = '<c:hidden_' . $storeId . '>hidden</c:hidden_' . $storeId . '>';
+                break;
+            case Mage_Catalog_Model_Product_Visibility::VISIBILITY_IN_CATALOG:
+                $visibilityXml = '<c:hidden_' . $storeId . '>catalog</c:hidden_' . $storeId . '>';
+                break;
+            case Mage_Catalog_Model_Product_Visibility::VISIBILITY_IN_SEARCH:
+                $visibilityXml = '<c:hidden_' . $storeId . '>search</c:hidden_' . $storeId . '>';
+                break;
+            case Mage_Catalog_Model_Product_Visibility::VISIBILITY_BOTH:
+                $visibilityXml = '<c:hidden_' . $storeId . '>catalog</c:hidden_' . $storeId . '><c:hidden_' . $storeId . '>search</c:hidden_' . $storeId . '>';
+                break;
+        }
+
+        return $visibilityXml;
     }
 
     /**
@@ -210,7 +265,7 @@ class Me_Gravity_Model_Products extends Me_Gravity_Model_Export_Catalog_Product
         if (isset($item['categoryPath']) && is_array($item['categoryPath'])) {
             foreach ($item['categoryPath'] as $categoryPath)
                 $categoryXml .= sprintf(
-                    '<c:categoryPath_' . $storeId . '>%s</c:categoryPath_' . $storeId . '>',
+                    '<c:categoryPath_' . $storeId . '><![CDATA[%s]]></c:categoryPath_' . $storeId . '>',
                     $categoryPath
                 );
         }
@@ -254,7 +309,7 @@ class Me_Gravity_Model_Products extends Me_Gravity_Model_Export_Catalog_Product
         if (isset($item['attributes']) && is_array($item['attributes'])) {
             foreach ($item['attributes'] as $attributeCode => $attribute)
                 $attributesXml .= sprintf(
-                    '<' . $attributeCode . '>%s</' . $attributeCode . '>',
+                    '<' . $attributeCode . '><![CDATA[%s]]></' . $attributeCode . '>',
                     $attribute
                 );
         }
@@ -326,7 +381,7 @@ class Me_Gravity_Model_Products extends Me_Gravity_Model_Export_Catalog_Product
 
                         if ($asXml) {
                             $additionalXml .= sprintf(
-                                '<' . $attributeCode . '_' . $storeId . '>%s</' . $attributeCode . '>',
+                                '<' . $attributeCode . '_' . $storeId . '><![CDATA[%s]]></' . $attributeCode . '>',
                                 htmlspecialchars(implode(',', $additionalValues))
                             );
                         } else {

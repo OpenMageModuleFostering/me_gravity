@@ -17,19 +17,23 @@
  * @see Me_Gravity_Block_Page_Js_Gravity
  */
 ?>
-<?php if($this->isEnabled() && $this->getGravityCustomerId()) : ?>
-    <script type="text/javascript">
-    //<![CDATA[
-        var _gravity = _gravity || [];
-        (function() {
-            var gr = document.createElement("script");
-            gr.type = "text/javascript";
-            gr.async = !0;
-            //gr.src = document.location.protocol + "//saas.gravityrd.com/js/CUSTOMERID/gr_reco4-min.js";
-            gr.src = "http://<?php echo $this->getGravityCustomerId() ?>-bud.gravityrd-services.com/js/<?php echo $this->getGravityCustomerId() ?>/gr_reco4-min.js";
-            var s = document.getElementsByTagName("script")[0];
-            s.parentNode.insertBefore(gr, s);
-        })();
-    //]]>
-    </script>
+<?php if ($this->isEnabled() && $this->getGravityCustomerId()) : ?>
+    <?php if ($this->isCustomJsEnabled()) : ?>
+        <?php echo $this->getCustomJsContent(); ?>
+    <?php else : ?>
+        <script type="text/javascript">
+            //<![CDATA[
+            var _gravity = _gravity || [];
+            (function () {
+                var gr = document.createElement("script");
+                gr.type = "text/javascript";
+                gr.async = !0;
+                //gr.src = document.location.protocol + "//saas.gravityrd.com/js/CUSTOMERID/gr_reco4-min.js";
+                gr.src = "http://<?php echo $this->getGravityCustomerId() ?>-bud.gravityrd-services.com/js/<?php echo $this->getGravityCustomerId() ?>/gr_reco4-min.js";
+                var s = document.getElementsByTagName("script")[0];
+                s.parentNode.insertBefore(gr, s);
+            })();
+            //]]>
+        </script>
+    <?php endif; ?>
 <?php endif; ?>

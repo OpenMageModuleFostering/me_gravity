@@ -372,7 +372,7 @@ class Me_Gravity_Model_Method_Request extends Me_Gravity_Model_Method_Abstract
         $recommendationContext->nameValues = array($storeValue);
 
         if (isset($params['itemId']) && $params['itemId']) {
-            $pageItemId = new GravityNameValue('currentItemId', 'ItemID_' . $params['itemId']);
+            $pageItemId = new GravityNameValue('currentItemId', $params['itemId']);
             $recommendationContext->nameValues = array_merge(array($pageItemId), $recommendationContext->nameValues);
         }
 
@@ -511,7 +511,10 @@ class Me_Gravity_Model_Method_Request extends Me_Gravity_Model_Method_Abstract
 
         if ($result && $result instanceof stdClass) {
 
-            $answer[$result->recommendationId] = $result->itemIds;
+            if (!empty($result->itemIds)) {
+                $answer[$result->recommendationId] = $result->itemIds;
+            }
+
             return $answer;
 
         } elseif ($result && is_string($result)) {

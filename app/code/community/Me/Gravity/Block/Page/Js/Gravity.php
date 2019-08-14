@@ -34,4 +34,24 @@ class Me_Gravity_Block_Page_Js_Gravity extends Me_Gravity_Block_Abstract
     {
         return Mage::getSingleton('customer/session')->getCustomerId();
     }
+
+    /**
+     * Get custom Gravity JS is enabled
+     *
+     * @return bool
+     */
+    public function isCustomJsEnabled()
+    {
+        return $this->getGravityHelper()->getIsCustomJsEnabled();
+    }
+
+    /**
+     * Get custom Gravity JS content
+     *
+     * @return string
+     */
+    public function getCustomJsContent()
+    {
+        return $this->getGravityHelper()->getCustomJs();
+    }
 }

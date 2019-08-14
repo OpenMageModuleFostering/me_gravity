@@ -592,25 +592,25 @@ class Me_Gravity_Model_Observer
 
         try {
 
-            $currentStore = Mage::app()->getStore()->getCode();
-            $gravityHelper->getLogger('$currentStore: ' . $currentStore);
-            Mage::app()->setCurrentStore('admin');
-
-            foreach (Mage::app()->getStores() as $store) {
-
-                if (!$gravityHelper->isEnabled($store->getId())) {
-                    continue;
-                }
-
-                $filename = Mage::getModel('me_gravity/products')->generateCatalogXml($store->getId());
-                if ($filename) {
-                    $gravityHelper->getLogger($gravityHelper->__('Store Id: %s exported to %s', $store->getId(), $filename));
-                } else {
-                    $gravityHelper->getLogger($gravityHelper->__('Store Id: %s exported error', $store->getId()));
-                }
+            if (!$gravityHelper->isEnabled() || !$gravityHelper->getCatalogCronEnabled()) {
+                $gravityHelper->getLogger($gravityHelper->__('Cron job catalog export error. Gravity module or scheduled export disabled.'));
+                return false;
             }
 
-            Mage::app()->setCurrentStore($currentStore);
+            $currentStore = Mage::app()->getStore()->getCode();
+            $gravityHelper->getLogger('Cron job current store: ' . $currentStore);
+
+            $timeStart = microtime(true);
+            $resultFileName = Mage::getModel('me_gravity/products')->generateCatalogXml();
+            $timeEnd = microtime(true);
+
+            if ($gravityHelper->getDebugMode()) {
+                if ($resultFileName) {
+                    $gravityHelper->getLogger($this->_getGravityHelper()->__('Cron job catalog export finished in %s seconds', $timeEnd - $timeStart));
+                } else {
+                    $gravityHelper->getLogger($gravityHelper->__('Cron job catalog export error'));
+                }
+            }
 
         } catch (Mage_Core_Exception $e) {
             $gravityHelper->getLogger($e->getMessage());

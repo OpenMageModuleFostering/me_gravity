@@ -12,7 +12,7 @@
 <config>
     <modules>
         <Me_Gravity>
-            <version>1.0.0.7</version>
+            <version>1.0.1.7</version>
         </Me_Gravity>
     </modules>
     <global>
@@ -153,13 +153,24 @@
             <config>
                 <enabled>0</enabled>
                 <preview>1</preview>
+                <enabled_js>0</enabled_js>
+                <custom_js><![CDATA[
+<script>
+(function(g,r,a,v,i,t,y){g[a]=g[a]||[],y=r.createElement(v),g=r.getElementsByTagName(v)[0];y.async=1;
+y.src='//'+i+'/js/'+t+'/gr_reco5.min.js';g.parentNode.insertBefore(y,g);y=r.createElement(v),y.async=1;
+y.src='//'+i+'/grrec-'+t+'-war/JSServlet4?cc=test';g.parentNode.insertBefore(y,g);})
+(window, document, '_gravity','script', 'magento-ams.gravityrd-services.com', 'magento');
+</script>
+                ]]></custom_js>
                 <template>0</template>
             </config>
             <export>
                 <catalog_path>gravity_reco/</catalog_path>
                 <all>0</all>
                 <max>1000</max>
+                <description_enabled>0</description_enabled>
                 <only_salable>1</only_salable>
+                <status>0</status>
                 <catalog_cron>0</catalog_cron>
                 <catalog_cron_time>02,30,00</catalog_cron_time>
             </export>

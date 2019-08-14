@@ -58,6 +58,20 @@ class Me_Gravity_Helper_Data extends Mage_Core_Helper_Data
     const XML_PATH_API_PASSWORD = 'gravity/config/api_password';
 
     /**
+     * Path to store config if custom Gravity JS enabled
+     *
+     * @var string
+     */
+    const XML_PATH_CUSTOM_JS_ENABLED = 'gravity/config/enabled_js';
+
+    /**
+     * Path to store config custom Gravity JS
+     *
+     * @var string
+     */
+    const XML_PATH_CUSTOM_JS = 'gravity/config/custom_js';
+
+    /**
      * Path to store config catalog export path
      *
      * @var string
@@ -84,6 +98,20 @@ class Me_Gravity_Helper_Data extends Mage_Core_Helper_Data
      * @var string
      */
     const XML_CATALOG_EXPORT_MAX_PATH = 'gravity/export/max';
+
+    /**
+     * Path to store config if product's description enabled in catalog export
+     *
+     * @var string
+     */
+    const XML_CATALOG_EXPORT_DESCRIPTION = 'gravity/export/description_enabled';
+
+    /**
+     * Path to store config catalog export cron enabled
+     *
+     * @var string
+     */
+    const XML_CATALOG_EXPORT_CRON = 'gravity/export/catalog_cron';
 
     /**
      * Path to store config customer export all
@@ -119,6 +147,13 @@ class Me_Gravity_Helper_Data extends Mage_Core_Helper_Data
      * @var string
      */
     const XML_PATH_EXPORT_ONLY_SALABLE = 'gravity/export/only_salable';
+
+    /**
+     * Path to store config product status parameter for export
+     *
+     * @var string
+     */
+    const XML_PATH_EXPORT_STATUS = 'gravity/export/status';
 
     /**
      * Path to store config customer update synchronisation
@@ -243,6 +278,28 @@ class Me_Gravity_Helper_Data extends Mage_Core_Helper_Data
     }
 
     /**
+     * Checks whether custom Gravity JS is enabled
+     *
+     * @param integer|string|Mage_Core_Model_Store $store store
+     * @return boolean
+     */
+    public function getIsCustomJsEnabled($store = null)
+    {
+        return Mage::getStoreConfigFlag(self::XML_PATH_CUSTOM_JS_ENABLED, $store);
+    }
+
+    /**
+     * Get custom Gravity JS content
+     *
+     * @param integer|string|Mage_Core_Model_Store $store store
+     * @return string
+     */
+    public function getCustomJs($store = null)
+    {
+        return Mage::getStoreConfig(self::XML_PATH_CUSTOM_JS, $store);
+    }
+
+    /**
      * Get catalog export file path
      *
      * @param integer|string|Mage_Core_Model_Store $store store
@@ -308,6 +365,28 @@ class Me_Gravity_Helper_Data extends Mage_Core_Helper_Data
     }
 
     /**
+     * Get if product's description attribute enabled in catalog export
+     *
+     * @param integer|string|Mage_Core_Model_Store $store store
+     * @return bool
+     */
+    public function isDescriptionExportEnabled($store = null)
+    {
+        return Mage::getStoreConfigFlag(self::XML_CATALOG_EXPORT_DESCRIPTION, $store);
+    }
+
+    /**
+     * Get catalog export cron enabled
+     *
+     * @param integer|string|Mage_Core_Model_Store $store store
+     * @return bool
+     */
+    public function getCatalogCronEnabled($store = null)
+    {
+        return Mage::getStoreConfigFlag(self::XML_CATALOG_EXPORT_CRON, $store);
+    }
+
+    /**
      * Get customer export all
      *
      * @param integer|string|Mage_Core_Model_Store $store store
@@ -338,6 +417,17 @@ class Me_Gravity_Helper_Data extends Mage_Core_Helper_Data
     public function getOnlySalable($store = null)
     {
         return Mage::getStoreConfigFlag(self::XML_PATH_EXPORT_ONLY_SALABLE, $store);
+    }
+
+    /**
+     * Get catalog export disabled status products
+     *
+     * @param integer|string|Mage_Core_Model_Store $store store
+     * @return bool
+     */
+    public function getOnlyEnabledStatus($store = null)
+    {
+        return Mage::getStoreConfigFlag(self::XML_PATH_EXPORT_STATUS, $store);
     }
 
     /**

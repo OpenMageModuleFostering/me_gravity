@@ -82,6 +82,28 @@
                             <show_in_store>1</show_in_store>
                             <comment>API communication URL.</comment>
                         </api_url>
+                        <enabled_js translate="label">
+                            <label>Enable Custom Gravity Javascript</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>55</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Please select YES, if you want to edit or customize the extension's main Gravity javascript.</comment>
+                        </enabled_js>
+                        <custom_js translate="label">
+                            <label>Custom Gravity Javascript</label>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>56</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment><![CDATA[<strong> Important!</strong> Here you can edit the main Gravity javascript. <strong>You have to replace</strong> the two occurrence of the "magento" string in your custom javascript with the API username above!]]></comment>
+                            <depends>
+                                <enabled_js>1</enabled_js>
+                            </depends>
+                        </custom_js>
                         <test translate="label">
                             <label>Test Connection</label>
                             <frontend_type>button</frontend_type>
@@ -109,16 +131,16 @@
                     <frontend_type>text</frontend_type>
                     <sort_order>20</sort_order>
                     <show_in_default>1</show_in_default>
-                    <show_in_website>1</show_in_website>
-                    <show_in_store>1</show_in_store>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
                     <fields>
                         <catalog_path translate="label">
                             <label>Catalog Export File Path</label>
                             <frontend_type>text</frontend_type>
                             <sort_order>10</sort_order>
                             <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
                             <comment>Path where catalog export file will be saved. Example: "gravity_reco/" (path must be writeable)</comment>
                         </catalog_path>
                         <all translate="label">
@@ -127,8 +149,8 @@
                             <source_model>adminhtml/system_config_source_yesno</source_model>
                             <sort_order>15</sort_order>
                             <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
                             <comment>Enable all products to export. Otherwise please select NO and set the maximum number. Note: there can be performance impact during this operation.</comment>
                         </all>
                         <max translate="label">
@@ -136,20 +158,30 @@
                             <frontend_type>text</frontend_type>
                             <sort_order>20</sort_order>
                             <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
                             <comment>The maximum number of products to be exported. This number must be between 1 and 1000.</comment>
                             <validate>validate-number validate-number-range number-range-1-1000</validate>
                             <depends><all>0</all></depends>
                         </max>
+                        <description_enabled translate="label">
+                            <label>Enable Products Description in Export</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>25</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>Please select YES, if you want to add product's description attribute to the catalog export.</comment>
+                        </description_enabled>
                         <additional translate="label">
                             <label>Additional Attributes</label>
                             <frontend_type>multiselect</frontend_type>
                             <source_model>me_gravity/system_config_source_catalog_attributes</source_model>
                             <sort_order>30</sort_order>
                             <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
                             <comment>Select additional attributes for catalog export.</comment>
                         </additional>
                         <only_salable translate="label">
@@ -158,10 +190,23 @@
                             <source_model>adminhtml/system_config_source_yesno</source_model>
                             <sort_order>40</sort_order>
                             <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
                             <comment>In this case only those products will be exported which quantity higher than zero(is in stock). If your store doesn't use stock management choose YES.</comment>
                         </only_salable>
+                        <status translate="label">
+                            <label>Export Disabled Products</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>45</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>Please select YES, if you want to add products with disabled status to the catalog export.</comment>
+                            <depends>
+                                <only_salable>0</only_salable>
+                            </depends>
+                        </status>
                         <catalog_cron translate="label">
                             <label>Enable Scheduled Export</label>
                             <frontend_type>select</frontend_type>
@@ -169,8 +214,8 @@
                             <backend_model>me_gravity/system_config_backend_catalog_cron</backend_model>
                             <sort_order>50</sort_order>
                             <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
                             <comment>Enable scheduled export job bby cron. Note: you must configure your server to run cron jobs.</comment>
                         </catalog_cron>
                         <catalog_cron_time translate="label">
@@ -178,8 +223,8 @@
                             <frontend_type>time</frontend_type>
                             <sort_order>60</sort_order>
                             <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
                             <comment>Daily start time for automatic catalog export via cron job.</comment>
                             <depends><catalog_cron>1</catalog_cron></depends>
                         </catalog_cron_time>
@@ -189,8 +234,8 @@
                             <frontend_model>me_gravity/adminhtml_system_config_form_catalog</frontend_model>
                             <sort_order>70</sort_order>
                             <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
                             <comment>This will export product catalog and save in xml file. Note: there can be performance impact during this operation.</comment>
                         </catalog>
                     </fields>
@@ -1055,8 +1100,8 @@
                     <frontend_type>text</frontend_type>
                     <sort_order>100</sort_order>
                     <show_in_default>1</show_in_default>
-                    <show_in_website>1</show_in_website>
-                    <show_in_store>1</show_in_store>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
                     <fields>
                         <log translate="label">
                             <label>Enable Debug</label>
@@ -1064,10 +1109,19 @@
                             <source_model>adminhtml/system_config_source_yesno</source_model>
                             <sort_order>10</sort_order>
                             <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
                             <comment>Enable debug. In this case all transactions will be logged in /var/gravity.log.</comment>
                         </log>
+                        <version translate="label">
+                            <label>Extension Version</label>
+                            <frontend_type>text</frontend_type>
+                            <frontend_model>me_gravity/adminhtml_system_config_form_version</frontend_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </version>
                     </fields>
                 </debug>
             </groups>

@@ -136,7 +136,9 @@ class Me_Gravity_Model_Export_Catalog_Product extends Me_Gravity_Model_Export_Ab
             }
         }
 
-        $productCollection->addAttributeToFilter('status', Mage_Catalog_Model_Product_Status::STATUS_ENABLED);
+        if (!$this->_helper->getOnlyEnabledStatus()) {
+            $productCollection->addAttributeToFilter('status', Mage_Catalog_Model_Product_Status::STATUS_ENABLED);
+        }
         $productCollection->load();
 
         return $productCollection;

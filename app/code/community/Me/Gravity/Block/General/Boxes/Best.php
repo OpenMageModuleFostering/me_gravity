@@ -33,15 +33,18 @@ class Me_Gravity_Block_General_Boxes_Best extends Me_Gravity_Block_Recommendatio
     protected function _construct()
     {
         $boxHelper = $this->_getGravityBoxHelper();
+        $gravityHelper = $this->getGravityHelper();
 
-        $this->setRecommendationType(Me_Gravity_Model_Method_Request::GENERAL_PERSONAL_BEST);
+        if (!$gravityHelper->useBulkRecommendation() || $gravityHelper->useGravityTemplate()) {
+            $this->setRecommendationType(Me_Gravity_Model_Method_Request::GENERAL_PERSONAL_BEST);
+            $this->setRecommendationLimit($boxHelper->getBoxLimit($this->_boxClass, $this->_pageType));
+        }
 
         $boxTitle = $boxHelper->getBoxTitle($this->_boxClass, $this->_pageType)
             ? $boxHelper->getBoxTitle($this->_boxClass, $this->_pageType)
             : $this->getGravityHelper()->__('Recommended for you');
         $this->setRecommendationTitle($boxTitle);
 
-        $this->setRecommendationLimit($boxHelper->getBoxLimit($this->_boxClass, $this->_pageType));
         $this->setBoxColumnCount($boxHelper->getBoxColumns($this->_boxClass, $this->_pageType));
 
         parent::_construct();

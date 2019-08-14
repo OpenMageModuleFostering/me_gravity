@@ -33,15 +33,18 @@ class Me_Gravity_Block_Catalog_Category_Boxes_Top extends Me_Gravity_Block_Catal
     protected function _construct()
     {
         $boxHelper = $this->_getGravityBoxHelper();
+        $gravityHelper = $this->getGravityHelper();
 
-        $this->setRecommendationType(Me_Gravity_Model_Method_Request::CATEGORY_PAGE_TOP);
+        if (!$gravityHelper->useBulkRecommendation() || $gravityHelper->useGravityTemplate()) {
+            $this->setRecommendationType(Me_Gravity_Model_Method_Request::CATEGORY_PAGE_TOP);
+            $this->setRecommendationLimit($boxHelper->getBoxLimit($this->_boxClass, $this->_pageType));
+        }
 
         $boxTitle = $boxHelper->getBoxTitle($this->_boxClass, $this->_pageType)
             ? $boxHelper->getBoxTitle($this->_boxClass, $this->_pageType)
             : $this->getGravityHelper()->__('Top Product(s)');
         $this->setRecommendationTitle($boxTitle);
 
-        $this->setRecommendationLimit($boxHelper->getBoxLimit($this->_boxClass, $this->_pageType));
         $this->setBoxColumnCount($boxHelper->getBoxColumns($this->_boxClass, $this->_pageType));
 
         $this->_setFilters();

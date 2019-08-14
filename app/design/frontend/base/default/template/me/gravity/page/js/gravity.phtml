@@ -14,26 +14,31 @@
 /**
  * Gravity initialization script
  *
+ * var $this Me_Gravity_Block_Page_Js_Gravity
  * @see Me_Gravity_Block_Page_Js_Gravity
  */
 ?>
 <?php if ($this->isEnabled() && $this->getGravityCustomerId()) : ?>
+    <?php $gravityHelper = $this->getGravityHelper(); ?>
     <?php if ($this->isCustomJsEnabled()) : ?>
         <?php echo $this->getCustomJsContent(); ?>
     <?php else : ?>
         <script type="text/javascript">
-            //<![CDATA[
+        //<![CDATA[
+            <?php if ($gravityHelper->useBulkRecommendation() && $gravityHelper->useGravityTemplate()) : ?>
+            window.gravityGroupSeq = 1;
+            window.gravityGroupSize = 0;
+            <?php endif; ?>
             var _gravity = _gravity || [];
-            (function () {
-                var gr = document.createElement("script");
-                gr.type = "text/javascript";
-                gr.async = !0;
-                //gr.src = document.location.protocol + "//saas.gravityrd.com/js/CUSTOMERID/gr_reco4-min.js";
-                gr.src = "http://<?php echo $this->getGravityCustomerId() ?>-bud.gravityrd-services.com/js/<?php echo $this->getGravityCustomerId() ?>/gr_reco4-min.js";
-                var s = document.getElementsByTagName("script")[0];
-                s.parentNode.insertBefore(gr, s);
-            })();
-            //]]>
+           (function(g,r,a,v,i,t,y){
+				g[a]=g[a]||[],y=r.createElement(v),
+				g=r.getElementsByTagName(v)[0];y.async=1;
+				y.src='//'+i+'/js/'+t+'/gr_reco5.min.js';
+				g.parentNode.insertBefore(y,g);y=r.createElement(v),y.async=1;
+				y.src='//'+i+'/grrec-'+t+'-war/JSServlet4?cc=1';
+				g.parentNode.insertBefore(y,g);
+			})(window, document, '_gravity','script', "<?php echo $this->getGravityCustomerId() ?>.yusp.com", "<?php echo $this->getGravityCustomerId() ?>");
+        //]]>
         </script>
     <?php endif; ?>
 <?php endif; ?>

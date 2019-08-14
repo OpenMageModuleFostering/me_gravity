@@ -90,7 +90,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <comment>Please select YES if you want to edit or customize the Yusp extension's main javascript.</comment>
+                            <comment>Please select YES, if you want to edit or customize the Yusp extension's main javascript.</comment>
                         </enabled_js>
                         <custom_js translate="label">
                             <label>Custom Yusp Javascript</label>
@@ -99,7 +99,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <comment><![CDATA[<strong> Important!</strong> Here you can edit the main Yusp javascript. <strong>You have to replace</strong> the two occurrences of the "magento" string in your custom javascript with your Yusp API username above!]]></comment>
+                            <comment><![CDATA[<strong> Important!</strong> Here you can edit the main Yusp javascript. <strong>You have to replace</strong> the two occurrences of the "magento" string in your custom javascript with the API username above!]]></comment>
                             <depends>
                                 <enabled_js>1</enabled_js>
                             </depends>
@@ -151,7 +151,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>0</show_in_website>
                             <show_in_store>0</show_in_store>
-                            <comment>The path where the catalog export file will be saved (relative to your Magento folder). Example: "yusp/" (path must be writable).</comment>
+                            <comment>The path where the catalog export file will be saved (relative to your Magento folder). Example: "yusp/" (path must be writeable).</comment>
                         </catalog_path>
                         <all translate="label">
                             <label>Enable Full Product Export</label>
@@ -266,7 +266,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <comment>Enable the export of all customers. Otherwise, please select no and set a maximum number. Note: This operation can impact the performance of your site.</comment>
+                            <comment>Enable the export of all customers. Otherwise, please, select no and set a maximum number. Note: This operation can impact the performance of your site.</comment>
                         </all>
                         <max translate="label">
                             <label>Maximum Customers Export</label>
@@ -317,7 +317,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <comment>General pages where Yusp recommendation boxes are enabled.</comment>
+                            <comment>Pages on general layout recommendation boxes enabled.</comment>
                         </pages>
                         <best_heading translate="label">
                             <label>Personal Best Box (PERSONAL_BEST)</label>
@@ -365,7 +365,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <comment>The number of items shown in "Recommended for you" boxes on general pages. This number must be between 1 and 10.
+                            <comment>Number of items shown in "Recommended for you" boxes on general pages. This number must be between 1 and 10.
                             </comment>
                             <validate>validate-number validate-number-range number-range-1-10</validate>
                             <depends><best_box>1</best_box></depends>
@@ -377,7 +377,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <comment>The number of columns in "Recommended for you" boxes on general pages. This number must be between 1 and 6. This option has no effects if the box is in the sidebar.</comment>
+                            <comment>The number of columns in "Recommended for you" boxes on general pages. This number must be between 1 and 6. This option has no effects, if the box is in the sidebar.</comment>
                             <validate>validate-number validate-number-range number-range-1-6</validate>
                             <depends>
                                 <best_box>1</best_box>
@@ -430,7 +430,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <comment>The number of items shown in "You viewed" boxes on general pages. This number must be between 1 and 10.
+                            <comment>Number of items shown in "You viewed" boxes on general pages. This number must be between 1 and 10.
                             </comment>
                             <validate>validate-number validate-number-range number-range-1-10</validate>
                             <depends><history_box>1</history_box></depends>
@@ -442,7 +442,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <comment>The number of columns in "You viewed" boxes on general pages. This number must be between 1 and 6. This option has no effects if the box is in the sidebar.</comment>
+                            <comment>The number of columns in "You viewed" boxes on general pages. This number must be between 1 and 6. This option has no effects, if the box is in the sidebar.</comment>
                             <validate>validate-number validate-number-range number-range-1-6</validate>
                             <depends>
                                 <history_box>1</history_box>
@@ -495,7 +495,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <comment>The number of items shown in "Others are looking at right now" boxes on general pages. This number must be between 1 and 10.</comment>
+                            <comment>Number of items shown in "Others are looking at right now" boxes on general pages. This number must be between 1 and 10.</comment>
                             <validate>validate-number validate-number-range number-range-1-10</validate>
                             <depends><others_box>1</others_box></depends>
                         </others_box_limit>
@@ -506,7 +506,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <comment>The number of columns in "Others are looking at right now" boxes on general pages. This number must be between 1 and 6. This option has no effects if the box is in the sidebar.</comment>
+                            <comment>The number of columns in "Others are looking at right now" boxes on general pages. This number must be between 1 and 6. This option has no effects, if the box is in the sidebar.</comment>
                             <validate>validate-number validate-number-range number-range-1-6</validate>
                             <depends>
                                 <others_box>1</others_box>
@@ -559,7 +559,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <comment>The number of items shown in "Top products" boxes on general pages. This number must be between 1 and 10.</comment>
+                            <comment>Number of items shown in "Top products" boxes on general pages. This number must be between 1 and 10.</comment>
                             <validate>validate-number validate-number-range number-range-1-10</validate>
                             <depends><popular_box>1</popular_box></depends>
                         </popular_box_limit>
@@ -570,7 +570,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <comment>The number of columns in "Top products" boxes on general pages. This number must be between 1 and 6. This option has no effects if the box is in the sidebar.</comment>
+                            <comment>The number of columns in "Top products" boxes on general pages. This number must be between 1 and 6. This option has no effects, if the box is in the sidebar.</comment>
                             <validate>validate-number validate-number-range number-range-1-6</validate>
                             <depends>
                                 <popular_box>1</popular_box>
@@ -633,7 +633,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <comment>The number of items shown in "You might also like" boxes on product pages. This number must be between 1 and 10.
+                            <comment>Number of items shown in "You might also like" boxes on product pages. This number must be between 1 and 10.
                             </comment>
                             <validate>validate-number validate-number-range number-range-1-10</validate>
                             <depends><similar_box>1</similar_box></depends>
@@ -645,7 +645,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <comment>The number of columns in "You might also like" boxes on product pages. This number must be between 1 and 6. This option has no effects if the box is in the sidebar.</comment>
+                            <comment>The number of columns in "You might also like" boxes on product pages. This number must be between 1 and 6. This option has no effects, if the box is in the sidebar.</comment>
                             <validate>validate-number validate-number-range number-range-1-6</validate>
                             <depends>
                                 <similar_box>1</similar_box>
@@ -698,7 +698,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <comment>The number of items shown in "Recommended for you" boxes on product pages. This number must be between 1 and 10.
+                            <comment>Number of items shown in "Recommended for you" boxes on product pages. This number must be between 1 and 10.
                             </comment>
                             <validate>validate-number validate-number-range number-range-1-10</validate>
                             <depends><personal_box>1</personal_box></depends>
@@ -710,7 +710,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <comment>The number of columns in "Recommended for you" boxes on product pages. This number must be between 1 and 6. This option has no effects if the box is in the sidebar.</comment>
+                            <comment>The number of columns in "Recommended for you" boxes on product pages. This number must be between 1 and 6. This option has no effects, if the box is in the sidebar.</comment>
                             <validate>validate-number validate-number-range number-range-1-6</validate>
                             <depends>
                                 <personal_box>1</personal_box>
@@ -763,7 +763,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <comment>The number of items shown in "You might also need" boxes on product pages. This number must be between 1 and 10.</comment>
+                            <comment>Number of items shown in "You might also need" boxes on product pages. This number must be between 1 and 10.</comment>
                             <validate>validate-number validate-number-range number-range-1-10</validate>
                             <depends><accessories_box>1</accessories_box></depends>
                         </accessories_box_limit>
@@ -774,7 +774,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <comment>The number of columns in "You might also need" boxes on product pages. This number must be between 1 and 6. This option has no effects if the box is in the sidebar.</comment>
+                            <comment>The number of columns in "You might also need" boxes on product pages. This number must be between 1 and 6. This option has no effects, if the box is in the sidebar.</comment>
                             <validate>validate-number validate-number-range number-range-1-6</validate>
                             <depends>
                                 <accessories_box>1</accessories_box>
@@ -837,7 +837,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <comment>The number of items shown in "Recommended for you" boxes on category pages. This number must be between 1 and 10.</comment>
+                            <comment>Number of items shown in "Recommended for you" boxes on category pages. This number must be between 1 and 10.</comment>
                             <validate>validate-number validate-number-range number-range-1-10</validate>
                             <depends><personal_box>1</personal_box></depends>
                         </personal_box_limit>
@@ -848,7 +848,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <comment>The number of columns in "Recommended for you" boxes on category pages. This number must be between 1 and 6. This option has no effects if the box is in the sidebar.</comment>
+                            <comment>The number of columns in "Recommended for you" boxes on category pages. This number must be between 1 and 6. This option has no effects, if the box is in the sidebar.</comment>
                             <validate>validate-number validate-number-range number-range-1-6</validate>
                             <depends>
                                 <personal_box>1</personal_box>
@@ -881,7 +881,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <comment>Select where "Top products" boxes should be shown on category pages.</comment>
+                            <comment>Select where "Top products" box should be shown on category pages.</comment>
                             <depends><top_box>1</top_box></depends>
                         </top_box_layout>
                         <top_box_title translate="label">
@@ -901,7 +901,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <comment>The number of items shown in "Top products" boxes on category pages. This number must be between 1 and 10.</comment>
+                            <comment>Number of items shown in "Top products" boxes on category pages. This number must be between 1 and 10.</comment>
                             <validate>validate-number validate-number-range number-range-1-10</validate>
                             <depends><top_box>1</top_box></depends>
                         </top_box_limit>
@@ -912,7 +912,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <comment>The number of columns in "Top products" boxes on category pages. This number must be between 1 and 6. This option has no effects if the box is in the sidebar.</comment>
+                            <comment>The number of columns in "Top products" boxes on category pages. This number must be between 1 and 6. This option has no effects, if the box is in the sidebar.</comment>
                             <validate>validate-number validate-number-range number-range-1-6</validate>
                             <depends>
                                 <top_box>1</top_box>
@@ -975,7 +975,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <comment>The number of items shown in "Recommended for you" boxes on search result pages. This number must be between 1 and 10.</comment>
+                            <comment>Number of items shown in "Recommended for you" boxes on search result pages. This number must be between 1 and 10.</comment>
                             <validate>validate-number validate-number-range number-range-1-10</validate>
                             <depends><search_box>1</search_box></depends>
                         </search_box_limit>
@@ -986,7 +986,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <comment>The number of columns in "Recommended for you" boxes on search result pages. This number must be between 1 and 6. This option has no effects if the box is in the sidebar.
+                            <comment>The number of columns in "Recommended for you" boxes on search result pages. This number must be between 1 and 6. This option has no effects, if the box is in the sidebar.
                             </comment>
                             <validate>validate-number validate-number-range number-range-1-6</validate>
                             <depends>
@@ -1050,7 +1050,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <comment>The number of items shown in "Others also bought" boxes on cart pages. This number must be between 1 and 10.</comment>
+                            <comment>Number of items shown in "Others also bought" boxes on cart pages. This number must be between 1 and 10.</comment>
                             <validate>validate-number validate-number-range number-range-1-10</validate>
                             <depends><cart_box>1</cart_box></depends>
                         </cart_box_limit>
@@ -1061,7 +1061,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <comment>The number of columns in "Others also bought" boxes on cart pages. This number must be between 1 and 6. This option has no effects if the box is in the sidebar.</comment>
+                            <comment>The number of columns in "Others also bought" boxes on cart pages. This number must be between 1 and 6. This option has no effects, if the box is in the sidebar.</comment>
                             <validate>validate-number validate-number-range number-range-1-6</validate>
                             <depends>
                                 <cart_box>1</cart_box>

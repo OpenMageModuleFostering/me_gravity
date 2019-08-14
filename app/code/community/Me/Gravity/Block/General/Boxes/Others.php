@@ -33,15 +33,18 @@ class Me_Gravity_Block_General_Boxes_Others extends Me_Gravity_Block_Recommendat
     protected function _construct()
     {
         $boxHelper = $this->_getGravityBoxHelper();
+        $gravityHelper = $this->getGravityHelper();
 
-        $this->setRecommendationType(Me_Gravity_Model_Method_Request::GENERAL_CURRENTLY_VIEWED);
+        if (!$gravityHelper->useBulkRecommendation() || $gravityHelper->useGravityTemplate()) {
+            $this->setRecommendationType(Me_Gravity_Model_Method_Request::GENERAL_CURRENTLY_VIEWED);
+            $this->setRecommendationLimit($boxHelper->getBoxLimit($this->_boxClass, $this->_pageType));
+        }
 
         $boxTitle = $boxHelper->getBoxTitle($this->_boxClass, $this->_pageType)
             ? $boxHelper->getBoxTitle($this->_boxClass, $this->_pageType)
             : $this->getGravityHelper()->__('Others are looking at right now');
         $this->setRecommendationTitle($boxTitle);
 
-        $this->setRecommendationLimit($boxHelper->getBoxLimit($this->_boxClass, $this->_pageType));
         $this->setBoxColumnCount($boxHelper->getBoxColumns($this->_boxClass, $this->_pageType));
 
         parent::_construct();

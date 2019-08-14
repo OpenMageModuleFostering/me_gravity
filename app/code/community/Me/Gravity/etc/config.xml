@@ -12,7 +12,7 @@
 <config>
     <modules>
         <Me_Gravity>
-            <version>1.0.1.7</version>
+            <version>1.0.2.1</version>
         </Me_Gravity>
     </modules>
     <global>
@@ -163,9 +163,10 @@ y.src='//'+i+'/grrec-'+t+'-war/JSServlet4?cc=test';g.parentNode.insertBefore(y,g
 </script>
                 ]]></custom_js>
                 <template>0</template>
+                <bulk>1</bulk>
             </config>
             <export>
-                <catalog_path>gravity_reco/</catalog_path>
+                <catalog_path>yusp/</catalog_path>
                 <all>0</all>
                 <max>1000</max>
                 <description_enabled>0</description_enabled>

@@ -100,4 +100,25 @@ class Me_Gravity_Helper_Boxes extends Mage_Core_Helper_Data
             return false;
         }
     }
+
+    /**
+     * Identify recommendation items key by partial string
+     *
+     * @param array  $bulkItems          bulk items array
+     * @param string $recommendationType type
+     * @return mixed
+     */
+    public function identifyBulkKeys($bulkItems = array(), $recommendationType = '')
+    {
+        $result = array();
+
+        foreach ($bulkItems as $k => $v) {
+            if (strpos($k, $recommendationType) !== false) {
+                $result[$k] = $bulkItems[$k];
+                break;
+            }
+        }
+
+        return $result;
+    }
 }

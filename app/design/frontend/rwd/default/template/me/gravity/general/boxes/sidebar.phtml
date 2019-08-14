@@ -18,7 +18,7 @@
 <?php $gravityHelper = $this->getGravityHelper(); ?>
 <?php if ($gravityHelper->useGravityTemplate()) : ?>
     <?php $storeId = $this->getStoreId(); ?>
-    <div class="block block-<?php echo $this->getBoxClass() ?>">
+    <div class="block block-<?php echo $this->getBoxClass() ?> me-gravity">
         <div class="block-title">
             <?php if($title = $this->getRecommendationTitle()) : ?>
                 <strong><span><?php echo $title ?></span></strong>
@@ -46,8 +46,14 @@
     </div>
     <script type="text/javascript">
         //<![CDATA[
+        document.observe("dom:loaded", function() {
             _gravity.push({
                 type: "recommendation",
+                <?php if ($gravityHelper->useBulkRecommendation()) : ?>
+                groupId: "MAIN_PAGE_GROUP",
+                groupSeq: window.gravityGroupSeq++,
+                groupSize: window.gravityGroupSize,
+                <?php endif; ?>
                 scenarioId: "<?php echo $this->getRecommendationType() ?>",
                 numberLimit: <?php echo $this->getRecommendationLimit() ?>,
                 storeId: <?php echo $storeId ?>,
@@ -57,6 +63,7 @@
                     templateElementId: "template-<?php echo $this->getBoxClass() ?>"
                 }
             });
+        });
         //]]>
     </script>
 <?php else : ?>

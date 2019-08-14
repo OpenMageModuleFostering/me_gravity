@@ -3,7 +3,9 @@
     "type": "magento-module",
     "license": "Gravity-R&D,-Ltd.",
     "homepage": "",
-    "description": "The Gravity Recommendation extension provides an interface between Magento web shop and Gravity Recommendation service. The communication based on PHP or Javascript API providing by Gravity service. ",
+    "description": "The Yusp Recommendation extension provides an
+interface between Magento and the Yusp recommendation service. The
+communication is based on the Yusp PHP or Javascript API.",
     "authors": [
     {
         "name": "Gravity Recommendations",

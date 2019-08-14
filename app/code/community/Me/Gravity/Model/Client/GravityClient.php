@@ -40,7 +40,7 @@ class GravityClient {
 	/**
 	 * The version info of the client.
 	 */
-	private $version = '1.0.9';
+	private $version = '1.0.10';
 
 	/**
 	 * Creates a new client instance with the specified configuration
@@ -191,6 +191,34 @@ class GravityClient {
 	}
 
 	/**
+	 * Given the userId and the cookieId, we can request recommendations for multiple scenarios (described by the context).
+	 * This function returns lists of recommended items for each of the given scenarios in an array.
+	 *
+	 * @param string <var>$userId</var> The identifier of the logged in user. If no user is logged in, null should be specified.
+	 * @param string <var>$cookieId</var> It should be a permanent identifier for the end users computer, preserving its value across browser sessions.
+	 * It should be always specified.
+	 * @param GravityRecommendationContext[] <var>$context</var>
+	 * Additional Array of information which describes the actual scenarios.
+	 * @return GravityItemRecommendation[]
+	 *	An Array containing the recommended items for each scenario with other information about the recommendation.
+	 */
+	public function getItemRecommendationBulk($userId, $cookieId, array $context) {
+		foreach ($context as $element) {
+			$element->cookieId = $cookieId;
+			$element->userId = $userId;
+		}
+		return $this->sendRequest(
+				'getItemRecommendationBulk',
+				array(
+				'userId' => $userId,
+				'cookieId' => $cookieId,
+				),
+				$context,
+				true
+		);
+	}
+	
+	/**
 	 * Simple test function to test without side effects whether the service is alive.
 	 * @return string "Hello " + <code>$name</code>
 	 */
@@ -247,7 +275,6 @@ class GravityClient {
 			curl_setopt($ch, CURLOPT_POST, true);
 			curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($requestBody));
 		}
-		
 		$result = curl_exec($ch);
 		
 		$retryEnabled = in_array($methodName, array("addUsers", "addItems"));

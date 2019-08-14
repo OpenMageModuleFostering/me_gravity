@@ -24,14 +24,20 @@ class Me_Gravity_Block_Catalog_Product_View_Boxes_Product extends Me_Gravity_Blo
     {
         if ($this->getRecommendationType()) {
 
-            $items = Mage::getModel('me_gravity/method_request')->sendRequest(
-                Me_Gravity_Model_Method_Request::EVENT_TYPE_GET,
-                array(
-                    'type' => $this->_recommendationType,
-                    'limit' => $this->_recommendationLimit,
-                    'itemId' => $this->getProduct() ? $this->getProduct()->getId() : null
-                )
-            );
+            $items = array();
+
+            if (!$this->getGravityHelper()->useBulkRecommendation()) {
+                $items = Mage::getModel('me_gravity/method_request')->sendRequest(
+                    Me_Gravity_Model_Method_Request::EVENT_TYPE_GET,
+                    array(
+                        'type' => $this->_recommendationType,
+                        'limit' => $this->_recommendationLimit,
+                        'itemId' => $this->getProduct() ? $this->getProduct()->getId() : null
+                    )
+                );
+            } else {
+                $items = $this->getBulkItems();
+            }
 
             if (!empty($items)) {
                 $this->_recommendationId = key($items);

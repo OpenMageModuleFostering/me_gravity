@@ -19,7 +19,7 @@
 <?php if ($gravityHelper->useGravityTemplate()) : ?>
     <?php $storeId = $this->getStoreId(); ?>
     <?php $_columnCount = 5; ?>
-    <div class="box box-<?php echo $this->getBoxClass() ?>">
+    <div class="box box-<?php echo $this->getBoxClass() ?> me-gravity">
         <div class="box-head">
             <?php if($title = $this->getRecommendationTitle()) : ?>
                 <h3><?php echo $title ?></h3>
@@ -45,21 +45,28 @@
     </div>
     <script type="text/javascript">
         //<![CDATA[
-        _gravity.push({
-            type: "recommendation",
-            scenarioId: "<?php echo $this->getRecommendationType() ?>",
-            numberLimit: <?php echo $this->getRecommendationLimit() ?>,
-            storeId: <?php echo $storeId ?>,
-            <?php if($filters = $this->getFilters()) : ?>
-                <?php foreach($filters as $attributeCode => $value) : ?>
-                    <?php echo $attributeCode ?>: "<?php echo $value ?>",
-                <?php endforeach; ?>
-            <?php endif; ?>
-            resultNames: ["itemId", "title_<?php echo $storeId ?>", "link_<?php echo $storeId ?>", "image_link_<?php echo $storeId ?>"],
-            templating: {
-                targetElementId: "target-<?php echo $this->getBoxClass() ?>",
-                templateElementId: "template-<?php echo $this->getBoxClass() ?>"
-            }
+        document.observe("dom:loaded", function() {
+            _gravity.push({
+                type: "recommendation",
+                <?php if ($gravityHelper->useBulkRecommendation()) : ?>
+                groupId: "CATEGORY_PAGE_GROUP",
+                groupSeq: window.gravityGroupSeq++,
+                groupSize: window.gravityGroupSize,
+                <?php endif; ?>
+                scenarioId: "<?php echo $this->getRecommendationType() ?>",
+                numberLimit: <?php echo $this->getRecommendationLimit() ?>,
+                storeId: <?php echo $storeId ?>,
+                <?php if($filters = $this->getFilters()) : ?>
+                    <?php foreach($filters as $attributeCode => $value) : ?>
+                        <?php echo $attributeCode ?>: "<?php echo $value ?>",
+                    <?php endforeach; ?>
+                <?php endif; ?>
+                resultNames: ["itemId", "title_<?php echo $storeId ?>", "link_<?php echo $storeId ?>", "image_link_<?php echo $storeId ?>"],
+                templating: {
+                    targetElementId: "target-<?php echo $this->getBoxClass() ?>",
+                    templateElementId: "template-<?php echo $this->getBoxClass() ?>"
+                }
+            });
         });
         //]]>
     </script>

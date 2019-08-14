@@ -29,14 +29,20 @@ class Me_Gravity_Block_Catalog_Category_Boxes_Category extends Me_Gravity_Block_
     {
         if ($this->getRecommendationType()) {
 
-            $items = Mage::getModel('me_gravity/method_request')->sendRequest(
-                Me_Gravity_Model_Method_Request::EVENT_TYPE_GET,
-                array(
-                    'type' => $this->_recommendationType,
-                    'limit' => $this->_recommendationLimit,
-                    'filters' => $this->_filters ? $this->_filters : null
-                )
-            );
+            $items = array();
+
+            if (!$this->getGravityHelper()->useBulkRecommendation()) {
+                $items = Mage::getModel('me_gravity/method_request')->sendRequest(
+                    Me_Gravity_Model_Method_Request::EVENT_TYPE_GET,
+                    array(
+                        'type' => $this->_recommendationType,
+                        'limit' => $this->_recommendationLimit,
+                        'filters' => $this->_filters ? $this->_filters : null
+                    )
+                );
+            } else {
+                $items = $this->getBulkItems();
+            }
 
             if (!empty($items)) {
 

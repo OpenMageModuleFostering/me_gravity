@@ -16,7 +16,47 @@
 class Me_Gravity_Model_Observer
 {
     /**
-     * App Gravity block to catalog product view
+     * Product recommendation types
+     *
+     * @var array
+     */
+    protected $_productRecommendationTypes = array(
+        'similar' => Me_Gravity_Model_Method_Request::PRODUCT_PAGE_SIMILAR,
+        'personal' => Me_Gravity_Model_Method_Request::PRODUCT_PAGE_PERSONAL,
+        'accessories' => Me_Gravity_Model_Method_Request::PRODUCT_PAGE_ACCESSORIES
+    );
+
+    /**
+     * Category recommendation types
+     *
+     * @var array
+     */
+    protected $_categoryRecommendationTypes = array(
+        'personal' => Me_Gravity_Model_Method_Request::CATEGORY_PAGE_PERSONAL,
+        'top' => Me_Gravity_Model_Method_Request::CATEGORY_PAGE_TOP
+    );
+
+    /**
+     * Main page recommendation types
+     *
+     * @var array
+     */
+    protected $_pageRecommendationTypes = array(
+        'best' => Me_Gravity_Model_Method_Request::GENERAL_PERSONAL_BEST,
+        'history' => Me_Gravity_Model_Method_Request::GENERAL_PERSONAL_HISTORY,
+        'others' => Me_Gravity_Model_Method_Request::GENERAL_CURRENTLY_VIEWED,
+        'popular' => Me_Gravity_Model_Method_Request::GENERAL_POPULAR
+    );
+
+    /**
+     * Category filters
+     *
+     * @var array|null
+     */
+    protected $_filters = null;
+
+    /**
+     * Add Gravity block to catalog product view
      *
      * @param Varien_Event_Observer $observer observer
      * @return void|boolean
@@ -416,14 +456,20 @@ class Me_Gravity_Model_Observer
      */
     protected function _setGeneralBoxes($layout)
     {
+        $bulkItems = array();
+        $gravityHelper = $this->_getGravityHelper();
         $boxHelper = $this->_getGravityBoxHelper();
 
-        $boxNames = array(
-            'best',
-            'history',
-            'others',
-            'popular'
-        );
+        $boxNames = array_keys($this->_pageRecommendationTypes);
+
+        if ($gravityHelper->useBulkRecommendation() && !$gravityHelper->useGravityTemplate()) {
+
+            $bulkItems = Mage::getModel('me_gravity/method_request')->sendRequest(
+                Me_Gravity_Model_Method_Request::EVENT_TYPE_BULK,
+                $this->_getPageBulkParameters($boxHelper, $boxNames)
+            );
+
+        }
 
         foreach ($boxNames as $name) {
 
@@ -431,6 +477,14 @@ class Me_Gravity_Model_Observer
 
                 $block = $layout->createBlock('me_gravity/general_boxes_' . $name)
                     ->setName('me.gravity.general.' . $name);
+
+                if ($gravityHelper->useBulkRecommendation() && !$gravityHelper->useGravityTemplate()) {
+                    $blockBulkItems = $boxHelper->identifyBulkKeys($bulkItems, $this->_pageRecommendationTypes[$name]);
+                    if ($blockBulkItems) {
+                        $block->setRecommendationType($this->_pageRecommendationTypes[$name]);
+                        $block->setBulkItems($blockBulkItems);
+                    }
+                }
 
                 if (Me_Gravity_Model_System_Config_Source_Layout_Layout::LAYOUT_CONTENT == $boxHelper->getBoxLayout($name, 'general')) {
                     $block->setTemplate('me/gravity/general/boxes/default.phtml');
@@ -443,6 +497,7 @@ class Me_Gravity_Model_Observer
                         $reference->append($block);
                     }
                 }
+
             }
 
         }
@@ -456,19 +511,37 @@ class Me_Gravity_Model_Observer
      */
     protected function _setCategoryPageBoxes($layout)
     {
+        $bulkItems = array();
+        $gravityHelper = $this->_getGravityHelper();
         $boxHelper = $this->_getGravityBoxHelper();
 
-        $boxNames = array(
-            'personal',
-            'top'
-        );
+        $boxNames = array_keys($this->_categoryRecommendationTypes);
 
+        $filterSet = false;
         foreach ($boxNames as $name) {
 
             if ($boxHelper->getBoxEnabled($name, 'category')) {
 
                 $block = $layout->createBlock('me_gravity/catalog_category_boxes_' . $name)
                     ->setName('me.gravity.category.' . $name);
+
+                if ($gravityHelper->useBulkRecommendation() && !$gravityHelper->useGravityTemplate() && !$filterSet) {
+
+                    $this->_filters = $block->getFilters();
+                    $bulkItems = Mage::getModel('me_gravity/method_request')->sendRequest(
+                        Me_Gravity_Model_Method_Request::EVENT_TYPE_BULK,
+                        $this->_getCategoryBulkParameters($boxHelper, $boxNames)
+                    );
+                    $filterSet = true;
+                }
+
+                if ($this->_getGravityHelper()->useBulkRecommendation()) {
+                    $blockBulkItems = $boxHelper->identifyBulkKeys($bulkItems, $this->_categoryRecommendationTypes[$name]);
+                    if ($blockBulkItems) {
+                        $block->setRecommendationType($this->_categoryRecommendationTypes[$name]);
+                        $block->setBulkItems($blockBulkItems);
+                    }
+                }
 
                 if (Me_Gravity_Model_System_Config_Source_Layout_Layout::LAYOUT_CONTENT == $boxHelper->getBoxLayout($name, 'category')) {
                     $block->setTemplate('me/gravity/catalog/category/boxes/default.phtml');
@@ -482,7 +555,6 @@ class Me_Gravity_Model_Observer
                     }
                 }
             }
-
         }
     }
 
@@ -494,19 +566,35 @@ class Me_Gravity_Model_Observer
      */
     protected function _setProductPageBoxes($layout)
     {
+        $bulkItems = array();
+        $gravityHelper = $this->_getGravityHelper();
         $boxHelper = $this->_getGravityBoxHelper();
 
-        $boxNames = array(
-            'similar',
-            'personal',
-            'accessories'
-        );
+        $boxNames = array_keys($this->_productRecommendationTypes);
+
+        if ($gravityHelper->useBulkRecommendation() && !$gravityHelper->useGravityTemplate()) {
+
+            $bulkItems = Mage::getModel('me_gravity/method_request')->sendRequest(
+                Me_Gravity_Model_Method_Request::EVENT_TYPE_BULK,
+                $this->_getProductBulkParameters($boxHelper, $this->_getProductId(), $boxNames)
+            );
+
+        }
 
         foreach ($boxNames as $name) {
 
             if ($boxHelper->getBoxEnabled($name, 'product')) {
                 $block = $layout->createBlock('me_gravity/catalog_product_view_boxes_' . $name)
                     ->setName('me.gravity.product.view.' . $name);
+
+                if ($this->_getGravityHelper()->useBulkRecommendation()) {
+                    $blockBulkItems = $boxHelper->identifyBulkKeys($bulkItems, $this->_productRecommendationTypes[$name]);
+                    if ($blockBulkItems) {
+                        $block->setRecommendationType($this->_productRecommendationTypes[$name]);
+                        $block->setBulkItems($blockBulkItems);
+                    }
+                }
+
                 if (Me_Gravity_Model_System_Config_Source_Layout_Layout::LAYOUT_CONTENT == $boxHelper->getBoxLayout($name, 'product')) {
                     $block->setTemplate('me/gravity/catalog/product/view/boxes/default.phtml');
                     if ($reference = $layout->getBlock(Me_Gravity_Model_System_Config_Source_Layout_Layout::LAYOUT_CONTENT)) {
@@ -521,6 +609,96 @@ class Me_Gravity_Model_Observer
             }
 
         }
+    }
+
+    /**
+     * Get current product
+     *
+     * @throws Mage_Core_Exception
+     * @return int|bool
+     */
+    protected function _getProductId()
+    {
+        $product = Mage::registry('current_product');
+        if (!is_null($product) && $product->getId()) {
+            return $product->getId();
+        } else {
+            Mage::throwException($this->_getGravityHelper()->__('Invalid product during bulk recommendation'));
+        }
+
+        return false;
+    }
+
+    /**
+     * Get product page bulk recommendation parameters
+     *
+     * @param Me_Gravity_Helper_Boxes $boxHelper helper
+     * @param int                     $itemId    item Id
+     * @param array                   $boxNames  box names
+     * @return array
+     */
+    protected function _getProductBulkParameters(Me_Gravity_Helper_Boxes $boxHelper, $itemId = 0, $boxNames = array())
+    {
+        $parameters = array();
+
+        foreach ($boxNames as $name) {
+            if ($boxHelper->getBoxEnabled($name, 'product')) {
+                $parameters[$name] = array(
+                    'type' => $this->_productRecommendationTypes[$name],
+                    'limit' => $boxHelper->getBoxLimit($name, 'product'),
+                    'itemId' => $itemId
+                );
+            }
+        }
+
+        return $parameters;
+    }
+
+    /**
+     * Get category page bulk recommendation parameters
+     *
+     * @param Me_Gravity_Helper_Boxes $boxHelper helper
+     * @param array                   $boxNames  box names
+     * @return array
+     */
+    protected function _getCategoryBulkParameters(Me_Gravity_Helper_Boxes $boxHelper, $boxNames = array())
+    {
+        $parameters = array();
+
+        foreach ($boxNames as $name) {
+            if ($boxHelper->getBoxEnabled($name, 'category')) {
+                $parameters[$name] = array(
+                    'type' => $this->_categoryRecommendationTypes[$name],
+                    'limit' => $boxHelper->getBoxLimit($name, 'category'),
+                    'filters' => $this->_filters ? $this->_filters : null
+                );
+            }
+        }
+
+        return $parameters;
+    }
+
+    /**
+     * Get main page bulk recommendation parameters
+     *
+     * @param Me_Gravity_Helper_Boxes $boxHelper helper
+     * @param array                   $boxNames  box names
+     * @return array
+     */
+    protected function _getPageBulkParameters(Me_Gravity_Helper_Boxes $boxHelper, $boxNames = array())
+    {
+        $parameters = array();
+
+        foreach ($boxNames as $name) {
+            if ($boxHelper->getBoxEnabled($name, 'general')) {
+                $parameters[$name] = array(
+                    'type' => $this->_pageRecommendationTypes[$name],
+                    'limit' => $boxHelper->getBoxLimit($name, 'general')
+                );
+            }
+        }
+
+        return $parameters;
     }
 
     /**

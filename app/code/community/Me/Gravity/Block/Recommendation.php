@@ -50,6 +50,8 @@ class Me_Gravity_Block_Recommendation extends Mage_Catalog_Block_Product_Abstrac
      */
     protected $_boxClass = '';
 
+    protected $_groupSec = 1;
+
     /**
      * Get recommended items
      *
@@ -59,13 +61,19 @@ class Me_Gravity_Block_Recommendation extends Mage_Catalog_Block_Product_Abstrac
     {
         if ($this->getRecommendationType()) {
 
-            $items = Mage::getModel('me_gravity/method_request')->sendRequest(
-                Me_Gravity_Model_Method_Request::EVENT_TYPE_GET,
-                array(
-                    'type' => $this->_recommendationType,
-                    'limit' => $this->_recommendationLimit
-                )
-            );
+            $items = array();
+
+            if (!$this->getGravityHelper()->useBulkRecommendation()) {
+                $items = Mage::getModel('me_gravity/method_request')->sendRequest(
+                    Me_Gravity_Model_Method_Request::EVENT_TYPE_GET,
+                    array(
+                        'type' => $this->_recommendationType,
+                        'limit' => $this->_recommendationLimit
+                    )
+                );
+            } else {
+                $items = $this->getBulkItems();
+            }
 
             if (!empty($items)) {
 
@@ -236,6 +244,26 @@ class Me_Gravity_Block_Recommendation extends Mage_Catalog_Block_Product_Abstrac
     public function getStoreId()
     {
         return Mage::app()->getStore()->getId();
+    }
+
+    /**
+     * Get bulk items
+     *
+     * @return mixed
+     */
+    public function getBulkItems()
+    {
+        return $this->getData('bulk_items');
+    }
+
+    /**
+     * Get customer session
+     *
+     * @return Mage_Customer_Model_Session
+     */
+    protected function _getSession()
+    {
+        return Mage::getSingleton('customer/session');
     }
 
     /**

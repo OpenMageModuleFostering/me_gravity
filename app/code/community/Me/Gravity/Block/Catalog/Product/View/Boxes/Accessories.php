@@ -33,15 +33,18 @@ class Me_Gravity_Block_Catalog_Product_View_Boxes_Accessories extends Me_Gravity
     protected function _construct()
     {
         $boxHelper = $this->_getGravityBoxHelper();
+        $gravityHelper = $this->getGravityHelper();
 
-        $this->setRecommendationType(Me_Gravity_Model_Method_Request::PRODUCT_PAGE_ACCESSORIES);
+        if (!$gravityHelper->useBulkRecommendation() || $gravityHelper->useGravityTemplate()) {
+            $this->setRecommendationType(Me_Gravity_Model_Method_Request::PRODUCT_PAGE_ACCESSORIES);
+            $this->setRecommendationLimit($boxHelper->getBoxLimit($this->_boxClass, $this->_pageType));
+        }
 
         $boxTitle = $boxHelper->getBoxTitle($this->_boxClass, $this->_pageType)
             ? $boxHelper->getBoxTitle($this->_boxClass, $this->_pageType)
             : $this->getGravityHelper()->__('Accessories');
         $this->setRecommendationTitle($boxTitle);
 
-        $this->setRecommendationLimit($boxHelper->getBoxLimit($this->_boxClass, $this->_pageType));
         $this->setBoxColumnCount($boxHelper->getBoxColumns($this->_boxClass, $this->_pageType));
 
         parent::_construct();

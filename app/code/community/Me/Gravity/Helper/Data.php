@@ -86,6 +86,13 @@ class Me_Gravity_Helper_Data extends Mage_Core_Helper_Data
     const XML_PATH_USE_TEMPLATE = 'gravity/config/template';
 
     /**
+     * Path to store config use bulk recommendation
+     *
+     * @var string
+     */
+    const XML_PATH_USE_BULK = 'gravity/config/bulk';
+
+    /**
      * Path to store config catalog export all
      *
      * @var string
@@ -439,6 +446,17 @@ class Me_Gravity_Helper_Data extends Mage_Core_Helper_Data
     public function useGravityTemplate($store = null)
     {
         return Mage::getStoreConfigFlag(self::XML_PATH_USE_TEMPLATE, $store);
+    }
+
+    /**
+     * Check whether use bulk recommendation
+     *
+     * @param integer|string|Mage_Core_Model_Store $store store
+     * @return bool
+     */
+    public function useBulkRecommendation($store = null)
+    {
+        return Mage::getStoreConfigFlag(self::XML_PATH_USE_BULK, $store);
     }
 
     /**

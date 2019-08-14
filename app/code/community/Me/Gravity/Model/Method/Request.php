@@ -23,6 +23,11 @@ class Me_Gravity_Model_Method_Request extends Me_Gravity_Model_Method_Abstract
     const EVENT_TYPE_GET = 'GET';
 
     /**
+     * Request event type bulk
+     */
+    const EVENT_TYPE_BULK = 'BULK';
+
+    /**
      * Send event type
      */
     const EVENT_TYPE_SEND = 'SEND';
@@ -199,6 +204,9 @@ class Me_Gravity_Model_Method_Request extends Me_Gravity_Model_Method_Abstract
                 case self::EVENT_TYPE_GET:
                     $result = $this->_getRecommendationItems($client, $params);
                     break;
+                case self::EVENT_TYPE_BULK:
+                    $result = $this->_getBulkRecommendationItems($client, $params);
+                    break;
                 case self::EVENT_TYPE_TEST:
                     $result = $client->test($this->_helper->getApiUser());
                     break;
@@ -216,7 +224,7 @@ class Me_Gravity_Model_Method_Request extends Me_Gravity_Model_Method_Abstract
                 $this->_helper->getLogger($result);
             }
 
-            return $this->_validateResult($result);
+            return $this->_validateResult($result, $this->_helper->useBulkRecommendation());
 
         } catch (Mage_Core_Exception $e) {
 
@@ -420,6 +428,75 @@ class Me_Gravity_Model_Method_Request extends Me_Gravity_Model_Method_Abstract
     }
 
     /**
+     * Get recommendation
+     *
+     * @param GravityClient $client client
+     * @param array         $params parameters
+     * @throws Mage_Core_Exception
+     * @return object
+     */
+    protected function _getBulkRecommendationItems($client, $params)
+    {
+        if ($this->_helper->getDebugMode()) {
+            $this->_helper->getLogger($params);
+        }
+
+        $recommendationContextArray = array();
+        $userId = $this->_getCustomerId();
+        $cookieId = $this->_gravityCookie;
+
+        $i = 0;
+        foreach ($params as $param) {
+
+            if (!isset($param['type'])) {
+                Mage::throwException($this->_helper->__('Invalid recommendation type.'));
+            }
+
+            $recommendationContext = new GravityRecommendationContext();
+            $recommendationContext->scenarioId = $param['type'];
+
+            if (isset($param['limit']) && $param['limit']) {
+                $recommendationContext->numberLimit = $param['limit'];
+            } else {
+                $recommendationContext->numberLimit = 5;
+            }
+
+            $storeValue = new GravityNameValue('storeId', $this->_storeId);
+            $recommendationContext->nameValues = array($storeValue);
+
+            if (isset($param['itemId']) && $param['itemId']) {
+                $pageItemId = new GravityNameValue('currentItemId', $param['itemId']);
+                $recommendationContext->nameValues = array_merge(array($pageItemId), $recommendationContext->nameValues);
+            }
+
+            $recommendationContext->recommendationTime = time();
+
+            $recommendationContextArray[$i] = $recommendationContext;
+            $recommendationContext = null;
+            $i++;
+        }
+
+        if ($this->_canDebugLog) {
+            $this->_helper->getLogger($recommendationContextArray);
+        }
+
+        $itemRecommendations = null;
+        try {
+
+            $itemRecommendations = $client->getItemRecommendationBulk($userId, $cookieId, $recommendationContextArray);
+
+            return $itemRecommendations;
+
+        } catch (GravityException $e) {
+
+            $this->_helper->getLogger($this->_helper->__('Error happened by getting the item recommendation!'));
+            $this->_helper->getLogger($e->getMessage());
+            $this->_helper->getLogger($e->faultInfo);
+
+        }
+    }
+
+    /**
      * Send update
      *
      * @param GravityClient $client client
@@ -443,7 +520,7 @@ class Me_Gravity_Model_Method_Request extends Me_Gravity_Model_Method_Abstract
                         $user->hidden = false;
 
                         if ($this->_canDebugLog) {
-                            $this->_helper->getLogger('userId: ' .$params['userid']);
+                            $this->_helper->getLogger('userId: ' . $params['userid']);
                         }
 
                         unset($params['type']);
@@ -461,24 +538,34 @@ class Me_Gravity_Model_Method_Request extends Me_Gravity_Model_Method_Abstract
                     break;
                 case self::EVENT_TYPE_PRODUCT_UPDATE:
                     if (isset($params['itemid']) && isset($params['title']) && $params['itemid'] && $params['title']) {
+			$stores = Mage::app()->getStores();
                         $item = new GravityItem();
                         $item->itemId = $params['itemid'];
-                        $item->title = $params['title'];
+			if ($params['storeId'] == 1) {
+                        	$item->title = $params['title'];
+			}
                         $item->hidden = $params['hidden'];
                         if ($this->_canDebugLog) {
-                            $this->_helper->getLogger('itemId: ' .$params['itemid']);
+                            $this->_helper->getLogger('itemId: ' . $params['itemid']);
                         }
 
                         unset($params['type']);
                         unset($params['itemid']);
                         unset($params['hidden']);
+			//$item->nameValues[] = new GravityNameValue("log", "".var_export($params,true));
                         foreach ($params as $attribute => $value) {
                             if ($value) {
-                                $item->nameValues[] = new GravityNameValue($attribute, $value);
+                                //$item->nameValues[] = new GravityNameValue($attribute, $value);
+        			//foreach ($stores as $store) {
+				if ($params['storeId'] != 0) {
+					$item->nameValues[] = new GravityNameValue($attribute."_".$params['storeId'], $value);
+				} else {
+                                	$item->nameValues[] = new GravityNameValue($attribute, $value);
+				}
                             }
                         }
                         $isAsync = true;
-                        $result = $client->addItem($item, $isAsync);
+                        $result = $client->updateItem($item, $isAsync);
 
                     } else {
                         Mage::throwException($this->_helper->__('Invalid ' . $params['type'] . ' parameters'));
@@ -503,13 +590,26 @@ class Me_Gravity_Model_Method_Request extends Me_Gravity_Model_Method_Abstract
      * Validate result
      *
      * @param stdClass $result result
+     * @param bool     $isBulk bulk recommendation
      * @return null|string|array
      */
-    protected function _validateResult($result)
+    protected function _validateResult($result, $isBulk = false)
     {
         $answer = array();
 
-        if ($result && $result instanceof stdClass) {
+        if ($isBulk && is_array($result)) {
+
+            foreach ($result as $_result) {
+
+                if (!empty($_result->itemIds) && $_result instanceof stdClass) {
+                    $answer[$_result->recommendationId] = $_result->itemIds;
+                }
+
+            }
+
+            return $answer;
+
+        } elseif ($result && $result instanceof stdClass) {
 
             if (!empty($result->itemIds)) {
                 $answer[$result->recommendationId] = $result->itemIds;

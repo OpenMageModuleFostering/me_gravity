@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @category  Me
+ * @package   Me_Gravity
+ * @author    Attila Sági <sagi.attila@magevolve.com>
+ * @copyright 2014 Magevolve Ltd. (http://magevolve.com)
+ * @license   http://magevolve.com/terms-and-conditions Magevolve Ltd. License
+ * @link      http://magevolve.com
+ */
+-->
+<layout version="0.1.0">
+    <default>
+        <reference name="head">
+            <reference name="head">
+                <action method="addCss" ifconfig="gravity/config/enabled"><stylesheet>css/me/gravity/gravity.css</stylesheet></action>
+                <block type="me_gravity/page_js_gravity" name="me.gravity.head.js" template="me/gravity/page/js/gravity.phtml"/>
+            </reference>
+        </reference>
+        <reference name="before_body_end">
+            <block type="me_gravity/page_js_gravity" name="me.gravity.before.body.end.js" template="me/gravity/page/js/body-end.phtml" />
+        </reference>
+    </default>
+
+    <catalog_product_view>
+        <reference name="before_body_end">
+            <block type="me_gravity/catalog_product_view_js_gravity" name="me.gravity.product.push.js" template="me/gravity/catalog/product/view/js/gravity.phtml" />
+        </reference>
+    </catalog_product_view>
+
+    <catalogsearch_result_index>
+        <reference name="before_body_end">
+            <block type="me_gravity/catalogsearch_js_gravity" name="me.gravity.catalogsearch.push.js" template="me/gravity/catalogsearch/js/gravity.phtml"/>
+        </reference>
+    </catalogsearch_result_index>
+
+    <catalogsearch_advanced_result>
+        <reference name="before_body_end">
+            <block type="me_gravity/catalogsearch_advanced_js_gravity" name="me.gravity.catalogsearch.advanced.push.js" template="me/gravity/catalogsearch/advanced/js/gravity.phtml"/>
+        </reference>
+    </catalogsearch_advanced_result>
+
+</layout>

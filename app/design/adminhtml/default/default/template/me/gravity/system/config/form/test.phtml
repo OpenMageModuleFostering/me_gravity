@@ -1,0 +1,38 @@
+<?php
+/**
+ * Class Me_Gravity_Block_Adminhtml_System_Config_Form_Test
+ *
+ * @category  Me
+ * @package   Me_Salesautopilot
+ * @author    Sági Attila <sagi.attila@magevolve.com>
+ * @copyright 2015 Magevolve Ltd. (http://magevolve.com)
+ * @license   http://magevolve.com/terms-and-conditions Magevolve Ltd. License
+ * @link      http://magevolve.com
+ */
+?>
+<?php
+/**
+ * @see Me_Gravity_Block_Adminhtml_System_Config_Form_Test
+ */
+?>
+<script type="text/javascript">
+    //<![CDATA[
+    function check() {
+        new Ajax.Request('<?php echo $this->getAjaxTestUrl() ?>', {
+            method: 'get',
+            type: 'json',
+            onSuccess: function (transport) {
+                var result = transport.responseText.evalJSON();
+                if (result.success) {
+                    alert(result.message);
+                } else {
+                    alert(result.message);
+                    window.location.reload();
+                }
+            }
+        });
+    }
+    //]]>
+</script>
+
+<?php echo $this->getButtonHtml() ?>

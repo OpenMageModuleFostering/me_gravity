@@ -1,0 +1,52 @@
+<?php
+/**
+ * Class Me_Gravity_Block_Catalogsearch_Advanced_Js_Gravity
+ *
+ * @category  Me
+ * @package   Me_Gravity
+ * @author    Attila Sági <sagi.attila@magevolve.com>
+ * @copyright 2014 Magevolve Ltd. (http://magevolve.com)
+ * @license   http://magevolve.com/terms-and-conditions Magevolve Ltd. License
+ * @link      http://magevolve.com
+ */
+?>
+<?php
+/**
+ * Gravity push script
+ *
+ * @see Me_Gravity_Block_Catalogsearch_Advanced_Js_Gravity
+ */
+?>
+<?php if ($this->isEnabled()) : ?>
+    <?php $searchCriterias = $this->getModifiedSearchCriterias(); ?>
+    <?php if($searchCriterias) : ?>
+        <script type="text/javascript">
+            //<![CDATA[
+            _gravity = _gravity || [];
+            _gravity.push({
+                type: "set",
+                userId: "<?php echo $this->getCustomerId() ?>"
+            });
+
+            _gravity.push({
+                type: "event",
+                eventType: "SEARCH",
+                storeId: <?php echo $this->getStoreId() ?>,
+                <?php foreach ($searchCriterias as $key => $criteria): ?>
+                    <?php if(strtolower($key) == 'price') : ?>
+                        <?php $prices = explode(' - ', $criteria['value']); ?>
+                        <?php if(isset($prices[0])) : ?>
+                            minPrice: "<?php echo $prices[0] ?>",
+                        <?php endif; ?>
+                        <?php if(isset($prices[1])) : ?>
+                            maxPrice: "<?php echo $prices[1] ?>",
+                        <?php endif; ?>
+                    <?php else : ?>
+                        <?php echo $this->escapeHtml(strtolower($key)); ?>:"<?php echo $this->escapeHtml($criteria['value']); ?>",
+                    <?php endif; ?>
+                <?php endforeach; ?>
+            });
+            //]]>
+        </script>
+    <?php endif; ?>
+<?php endif; ?>

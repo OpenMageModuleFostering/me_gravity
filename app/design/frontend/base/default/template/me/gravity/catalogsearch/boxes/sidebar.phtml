@@ -1,0 +1,98 @@
+<?php
+/**
+ * Class Me_Gravity_Block_Checkout_Cart_Boxes_Cart
+ *
+ * @category  Me
+ * @package   Me_Gravity
+ * @author    Attila Sági <sagi.attila@magevolve.com>
+ * @copyright 2015 Magevolve Ltd. (http://magevolve.com)
+ * @license   http://magevolve.com/terms-and-conditions Magevolve Ltd. License
+ * @link      http://magevolve.com
+ */
+?>
+<?php
+/**
+ * @see Me_Gravity_Block_Checkout_Cart_Boxes_Cart
+ */
+?>
+<?php $gravityHelper = $this->getGravityHelper(); ?>
+<?php if ($gravityHelper->useGravityTemplate()) : ?>
+    <?php $storeId = $this->getStoreId(); ?>
+    <div class="block block-<?php echo $this->getBoxClass() ?>">
+        <div class="block-title">
+            <?php if($title = $this->getRecommendationTitle()) : ?>
+                <strong><span><?php echo $title ?></span></strong>
+            <?php else : ?>
+                <strong><span><?php echo $gravityHelper->__('Recommended Item(s)') ?></span></strong>
+            <?php endif; ?>
+        </div>
+        <div id="target-<?php echo $this->getBoxClass() ?>" class="block-content"></div>
+        <div id="template-<?php echo $this->getBoxClass() ?>" style="display: none;">
+            <ol class="recItems mini-products-list" id="block-<?php echo $this->getBoxClass() ?>">
+                {for p in products}
+                <li class="item">
+                    <div class="product">
+                        <a href="${p.link_<?php echo $storeId ?>}" title="${p.title_<?php echo $storeId ?>}" class="product-image" onmousedown="_gravity.push({ type: 'event', eventType: 'REC_CLICK', itemId: '${p.itemid}'});"><img src="${p.image_link_<?php echo $storeId ?>}" width="50" alt=">${p.title_<?php echo $storeId ?>}" /></a>
+                        <div class="product-details">
+                            <p class="recItemTitle product-name"><a href="${p.link_<?php echo $storeId ?>}" onmousedown="_gravity.push({ type: 'event', eventType: 'REC_CLICK', itemId: '${p.itemid}'});">${p.title_<?php echo $storeId ?>}</a></p>
+                        </div>
+                    </div>
+                    <div class="clearer"></div>
+                </li>
+                {/for}
+            </ol>
+            <script type="text/javascript">decorateList('block-<?php echo $this->getBoxClass() ?>', 'none-recursive')</script>
+        </div>
+    </div>
+    <script type="text/javascript">
+        //<![CDATA[
+        _gravity.push({
+            type: "recommendation",
+            scenarioId: "<?php echo $this->getRecommendationType() ?>",
+            numberLimit: <?php echo $this->getRecommendationLimit() ?>,
+            storeId: <?php echo $storeId ?>,
+            <?php if($searchKeywords = $this->getSearchKeywords()) : ?>
+                <?php foreach($searchKeywords as $attributeCode => $value) : ?>
+                    <?php echo $attributeCode ?>: "<?php echo $value ?>",
+                <?php endforeach; ?>
+            <?php endif; ?>
+            resultNames: ["itemId", "title_<?php echo $storeId ?>", "link_<?php echo $storeId ?>", "image_link_<?php echo $storeId ?>"],
+            templating: {
+                targetElementId: "target-<?php echo $this->getBoxClass() ?>",
+                templateElementId: "template-<?php echo $this->getBoxClass() ?>"
+            }
+        });
+        //]]>
+    </script>
+<?php else : ?>
+    <?php $items = $this->getProductCollection(); ?>
+    <?php if (!is_null($items) && $items->count()) : ?>
+        <div class="block block-<?php echo $this->getBoxClass() ?>">
+            <div class="block-title">
+                <?php if($title = $this->getRecommendationTitle()) : ?>
+                    <strong><span><?php echo $title ?></span></strong>
+                <?php else : ?>
+                    <strong><span><?php echo $gravityHelper->__('Recommended Item(s)') ?></span></strong>
+                <?php endif; ?>
+            </div>
+            <div class="block-content">
+                <?php $_collectionSize = $items->count(); ?>
+                <?php $_columnCount = $this->getBoxColumnCount(); ?>
+                <?php $i = 0; foreach ($items as $_product): ?>
+                    <ol class="mini-products-list" id="block-<?php echo $this->getBoxClass() ?>">
+                        <li class="item">
+                            <div class="product">
+                                <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->escapeHtml($_product->getName()) ?>" class="product-image" onmousedown="_gravity.push({ type: 'event', eventType: 'REC_CLICK', recId: '<?php echo $this->getRecommendationId() ?>', itemId: '<?php echo $_product->getId() ?>'});"><img src="<?php echo $this->helper('catalog/image')->init($_product, 'thumbnail')->resize(50) ?>" width="50" height="50" alt="<?php echo $this->escapeHtml($_product->getName()) ?>" /></a>
+                                <div class="product-details">
+                                    <p class="product-name"><a href="<?php echo $_product->getProductUrl() ?>" onmousedown="_gravity.push({ type: 'event', eventType: 'REC_CLICK', recId: '<?php echo $this->getRecommendationId() ?>', itemId: '<?php echo $_product->getId() ?>'});"><?php echo $this->escapeHtml($_product->getName()) ?></a></p>
+                                    <?php echo $this->getPriceHtml($_product, true, '-' . $this->getBoxClass()) ?>
+                                </div>
+                            </div>
+                        </li>
+                    </ol>
+                <?php endforeach; ?>
+                <script type="text/javascript">decorateList('block-<?php echo $this->getBoxClass() ?>', 'none-recursive')</script>
+            </div>
+        </div>
+    <?php endif; ?>
+<?php endif; ?>

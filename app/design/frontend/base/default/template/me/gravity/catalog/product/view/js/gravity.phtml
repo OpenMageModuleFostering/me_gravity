@@ -1,0 +1,41 @@
+<?php
+/**
+ * Class Me_Gravity_Block_Catalog_Product_View_Js_Gravity
+ *
+ * @category  Me
+ * @package   Me_Gravity
+ * @author    Attila Sági <sagi.attila@magevolve.com>
+ * @copyright 2014 Magevolve Ltd. (http://magevolve.com)
+ * @license   http://magevolve.com/terms-and-conditions Magevolve Ltd. License
+ * @link      http://magevolve.com
+ */
+?>
+<?php
+/**
+ * Gravity push script
+ *
+ * @see Me_Gravity_Block_Catalog_Product_View_Js_Gravity
+ */
+?>
+<?php if ($this->isEnabled()) : ?>
+    <script type="text/javascript">
+        //<![CDATA[
+        _gravity = _gravity || [];
+        _gravity.push({
+            type: "set",
+            //mode: "PROD",
+            userId: "<?php echo $this->getCustomerId() ?>"
+        });
+
+        _gravity.push({
+            type: "event",
+            eventType: "VIEW",
+            storeId: <?php echo $this->getStoreId() ?>,
+            itemId: "<?php echo $this->getProduct()->getId() ?>",
+            <?php if($categoryId = $this->getGravityCategoryId()) : ?>
+                categoryId: "<?php echo $categoryId ?>",
+            <?php endif; ?>
+        });
+        //]]>
+    </script>
+<?php endif; ?>

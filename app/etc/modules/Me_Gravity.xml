@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @category  Me
+ * @package   Me_Gravity
+ * @author    Attila Sági <sagi.attila@magevolve.com>
+ * @copyright 2014 Magevolve Ltd. (http://magevolve.com)
+ * @license   http://magevolve.com/terms-and-conditions Magevolve Ltd. License
+ * @link      http://magevolve.com
+ */
+-->
+<config>
+    <modules>
+        <Me_Gravity>
+            <active>true</active>
+            <codePool>community</codePool>
+            <depends>
+                <Mage_Core />
+                <Mage_Adminhtml />
+                <Mage_Catalog />
+                <Mage_Customer />
+                <Mage_Sales />
+                <Mage_Sales />
+            </depends>
+        </Me_Gravity>
+    </modules>
+</config>

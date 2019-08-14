@@ -1,0 +1,245 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @category  Me
+ * @package   Me_Gravity
+ * @author    Attila Sági <sagi.attila@magevolve.com>
+ * @copyright 2015 Magevolve Ltd. (http://magevolve.com)
+ * @license   http://magevolve.com/terms-and-conditions Magevolve Ltd. License
+ * @link      http://magevolve.com
+ */
+-->
+<config>
+    <modules>
+        <Me_Gravity>
+            <version>1.0.0.7</version>
+        </Me_Gravity>
+    </modules>
+    <global>
+        <models>
+            <me_gravity>
+                <class>Me_Gravity_Model</class>
+                <resourceModel>gravity_resource</resourceModel>
+            </me_gravity>
+        </models>
+        <helpers>
+            <me_gravity>
+                <class>Me_Gravity_Helper</class>
+            </me_gravity>
+        </helpers>
+        <blocks>
+            <me_gravity>
+                <class>Me_Gravity_Block</class>
+            </me_gravity>
+        </blocks>
+    </global>
+    <frontend>
+        <layout>
+            <updates>
+                <me_gravity>
+                    <file>me/gravity.xml</file>
+                </me_gravity>
+            </updates>
+        </layout>
+        <events>
+            <controller_action_layout_generate_blocks_after>
+                <observers>
+                    <me_gravity_set_handle>
+                        <class>me_gravity/observer</class>
+                        <method>setGravityProductBlock</method>
+                    </me_gravity_set_handle>
+                </observers>
+            </controller_action_layout_generate_blocks_after>
+            <sales_quote_remove_item>
+                <observers>
+                    <me_gravity_remove_from_cart_after>
+                        <class>me_gravity/observer</class>
+                        <method>gravityRemoveFromCart</method>
+                    </me_gravity_remove_from_cart_after>
+                </observers>
+            </sales_quote_remove_item>
+            <checkout_cart_product_add_after>
+                <observers>
+                    <me_gravity_add_to_cart_after>
+                        <class>me_gravity/observer</class>
+                        <method>gravityAddToCart</method>
+                    </me_gravity_add_to_cart_after>
+                </observers>
+            </checkout_cart_product_add_after>
+            <checkout_cart_update_items_before>
+                <observers>
+                    <me_gravity_update_cart_after>
+                        <class>me_gravity/observer</class>
+                        <method>gravityUpdateCart</method>
+                    </me_gravity_update_cart_after>
+                </observers>
+            </checkout_cart_update_items_before>
+            <sales_order_place_after>
+                <observers>
+                    <me_gravity_order_place_after>
+                        <class>me_gravity/observer</class>
+                        <method>gravitySendBuy</method>
+                    </me_gravity_order_place_after>
+                </observers>
+            </sales_order_place_after>
+            <customer_register_success>
+                <observers>
+                    <me_gravity_customer_register_after>
+                        <class>me_gravity/observer</class>
+                        <method>gravityCustomerRegistration</method>
+                    </me_gravity_customer_register_after>
+                </observers>
+            </customer_register_success>
+        </events>
+    </frontend>
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <Me_Gravity before="Mage_Adminhtml">Me_Gravity_Adminhtml</Me_Gravity>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+    <adminhtml>
+        <layout>
+            <updates>
+                <me_gravity>
+                    <file>me/gravity.xml</file>
+                </me_gravity>
+            </updates>
+        </layout>
+        <translate>
+            <modules>
+                <Me_Gravity>
+                    <files>
+                        <default>Me_Gravity.csv</default>
+                    </files>
+                </Me_Gravity>
+            </modules>
+        </translate>
+        <events>
+            <customer_save_after>
+                <observers>
+                    <me_gravity_customer_save_after>
+                        <class>me_gravity/observer</class>
+                        <method>gravityUserUpdate</method>
+                    </me_gravity_customer_save_after>
+                </observers>
+            </customer_save_after>
+            <catalog_product_save_after>
+                <observers>
+                    <me_gravity_product_save_after>
+                        <class>me_gravity/observer</class>
+                        <method>gravityProductUpdate</method>
+                    </me_gravity_product_save_after>
+                </observers>
+            </catalog_product_save_after>
+        </events>
+    </adminhtml>
+    <crontab>
+        <jobs>
+            <me_gravity_catalog_generate>
+                <run>
+                    <model>me_gravity/observer::scheduledExport</model>
+                </run>
+            </me_gravity_catalog_generate>
+        </jobs>
+    </crontab>
+    <default>
+        <gravity>
+            <config>
+                <enabled>0</enabled>
+                <preview>1</preview>
+                <template>0</template>
+            </config>
+            <export>
+                <catalog_path>gravity_reco/</catalog_path>
+                <all>0</all>
+                <max>1000</max>
+                <only_salable>1</only_salable>
+                <catalog_cron>0</catalog_cron>
+                <catalog_cron_time>02,30,00</catalog_cron_time>
+            </export>
+            <cutomer_export>
+                <all>0</all>
+                <max>1000</max>
+            </cutomer_export>
+            <general_display>
+                <best_box>0</best_box>
+                <best_box_layout>content</best_box_layout>
+                <best_box_title>Recommended for you</best_box_title>
+                <best_box_limit>4</best_box_limit>
+                <best_box_columns>4</best_box_columns>
+                <history_box>0</history_box>
+                <history_box_layout>content</history_box_layout>
+                <history_box_title>You viewed</history_box_title>
+                <history_box_limit>4</history_box_limit>
+                <history_box_columns>4</history_box_columns>
+                <others_box>0</others_box>
+                <others_box_layout>content</others_box_layout>
+                <others_box_title>Others are looking at right now</others_box_title>
+                <others_box_limit>4</others_box_limit>
+                <others_box_columns>4</others_box_columns>
+                <popular_box>0</popular_box>
+                <popular_box_layout>content</popular_box_layout>
+                <popular_box_title>Top products</popular_box_title>
+                <popular_box_limit>4</popular_box_limit>
+                <popular_box_columns>4</popular_box_columns>
+            </general_display>
+            <product_display>
+                <similar_box>0</similar_box>
+                <similar_box_layout>content</similar_box_layout>
+                <similar_box_title>You might also like</similar_box_title>
+                <similar_box_limit>4</similar_box_limit>
+                <similar_box_columns>4</similar_box_columns>
+                <personal_box>0</personal_box>
+                <personal_box_layout>content</personal_box_layout>
+                <personal_box_title>Recommended for you</personal_box_title>
+                <personal_box_limit>4</personal_box_limit>
+                <personal_box_columns>4</personal_box_columns>
+                <accessories_box>0</accessories_box>
+                <accessories_box_layout>content</accessories_box_layout>
+                <accessories_box_title>You might also need</accessories_box_title>
+                <accessories_box_limit>4</accessories_box_limit>
+                <accessories_box_columns>4</accessories_box_columns>
+            </product_display>
+            <category_display>
+                <personal_box>0</personal_box>
+                <personal_box_layout>content</personal_box_layout>
+                <personal_box_title>Recommended for you</personal_box_title>
+                <personal_box_limit>4</personal_box_limit>
+                <personal_box_columns>4</personal_box_columns>
+                <top_box>0</top_box>
+                <top_box_layout>content</top_box_layout>
+                <top_box_title>Top Products</top_box_title>
+                <top_box_limit>4</top_box_limit>
+                <top_box_columns>4</top_box_columns>
+            </category_display>
+            <search_display>
+                <search_box>0</search_box>
+                <search_box_layout>content</search_box_layout>
+                <search_box_title>Recommended for you</search_box_title>
+                <search_box_limit>4</search_box_limit>
+                <search_box_columns>4</search_box_columns>
+            </search_display>
+            <cart_display>
+                <cart_box>0</cart_box>
+                <cart_box_layout>content</cart_box_layout>
+                <cart_box_title>Others also bought</cart_box_title>
+                <cart_box_limit>4</cart_box_limit>
+                <cart_box_columns>4</cart_box_columns>
+            </cart_display>
+            <sync>
+                <customer_update>0</customer_update>
+                <product_update>0</product_update>
+                <customer_registration>0</customer_registration>
+            </sync>
+            <debug>
+                <log>0</log>
+            </debug>
+        </gravity>
+    </default>
+</config>

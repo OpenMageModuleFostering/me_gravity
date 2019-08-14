@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @category  Me
+ * @package   Me_Gravity
+ * @author    Attila Sági <sagi.attila@magevolve.com>
+ * @copyright 2015 Magevolve Ltd. (http://magevolve.com)
+ * @license   http://magevolve.com/terms-and-conditions Magevolve Ltd. License
+ * @link      http://magevolve.com
+ */
+-->
+<widgets>
+    <me_gravity type="me_gravity/widget_boxes_widget" translate="name description" module="me_gravity">
+        <name>Gravity Box Widget</name>
+        <description>Gravity recommendation products grid widget</description>
+        <parameters>
+            <event_type translate="label description">
+                <required>1</required>
+                <visible>1</visible>
+                <label>Recommendation Type</label>
+                <type>select</type>
+                <value>personal_best</value>
+                <values>
+                    <default translate="label">
+                        <value>personal_best</value>
+                        <label>Recommended for you</label>
+                    </default>
+                    <personal translate="label">
+                        <value>personal_history</value>
+                        <label>You viewed</label>
+                    </personal>
+                    <currently translate="label">
+                        <value>currently_viewed</value>
+                        <label>Others are looking at right now</label>
+                    </currently>
+                    <popular translate="label">
+                        <value>popular</value>
+                        <label>Top products</label>
+                    </popular>
+                </values>
+                <description>Type of Recommendation Box</description>
+            </event_type>
+            <template_type translate="label">
+                <visible>1</visible>
+                <label>Use Garvity Template</label>
+                <type>select</type>
+                <value>0</value>
+                <source_model>adminhtml/system_config_source_yesno</source_model>
+                <description>If YES all boxes will use Gravity template.</description>
+            </template_type>
+            <box_title translate="label">
+                <required>1</required>
+                <visible>1</visible>
+                <value>Recommended Item(s)</value>
+                <label>Box Title</label>
+                <type>text</type>
+                <description>Title of Recommendation Box</description>
+            </box_title>
+            <box_limit translate="label">
+                <required>1</required>
+                <visible>1</visible>
+                <value>5</value>
+                <label>Number of Products to Display</label>
+                <type>text</type>
+                <description>Number of items show in Recommendation Box</description>
+                <validate>validate-number validate-number-range number-range-1-10</validate>
+            </box_limit>
+            <box_columns translate="label">
+                <required>1</required>
+                <visible>1</visible>
+                <value>4</value>
+                <label>Columns</label>
+                <type>text</type>
+                <description>Columns count in Recommendation Box</description>
+                <validate>validate-number validate-number-range number-range-1-6</validate>
+                <depends><template_type><value>0</value></template_type></depends>
+            </box_columns>
+            <template>
+                <required>1</required>
+                <visible>0</visible>
+                <value>me/gravity/widget/boxes/widget.phtml</value>
+            </template>
+        </parameters>
+    </me_gravity>
+</widgets>

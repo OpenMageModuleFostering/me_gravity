@@ -1,0 +1,99 @@
+<?php
+/**
+ * Class Me_Gravity_Block_Checkout_Cart_Boxes_Cart
+ *
+ * @category  Me
+ * @package   Me_Gravity
+ * @author    Attila Sági <sagi.attila@magevolve.com>
+ * @copyright 2015 Magevolve Ltd. (http://magevolve.com)
+ * @license   http://magevolve.com/terms-and-conditions Magevolve Ltd. License
+ * @link      http://magevolve.com
+ */
+?>
+<?php
+/**
+ * @see Me_Gravity_Block_Checkout_Cart_Boxes_Cart
+ */
+?>
+<?php $gravityHelper = $this->getGravityHelper(); ?>
+<?php if ($gravityHelper->useGravityTemplate()) : ?>
+    <?php $storeId = $this->getStoreId(); ?>
+    <div class="block block-<?php echo $this->getBoxClass() ?>">
+        <div class="block-title">
+            <?php if($title = $this->getRecommendationTitle()) : ?>
+                <strong><span><?php echo $title ?></span></strong>
+            <?php else : ?>
+                <strong><span><?php echo $gravityHelper->__('Recommended Item(s)') ?></span></strong>
+            <?php endif; ?>
+        </div>
+        <div id="target-<?php echo $this->getBoxClass() ?>" class="block-content"><?php echo $gravityHelper->__('Recommendations will be displayed here') ?></div>
+        <div id="template-<?php echo $this->getBoxClass() ?>" style="display: none;">
+            <ul class="recItems products-grid gravity-<?php echo $this->getBoxClass() ?>-grid" class="block-content" style="background: none;">
+                {for p in products}
+                <li class="item" style="min-height: 200px;">
+                    <a class="product-image" href="${p.link_<?php echo $storeId ?>}" onmousedown="_gravity.push({ type: 'event', eventType: 'REC_CLICK', itemId: '${p.itemid}'});">
+                        <img width="90" src='${p.image_link_<?php echo $storeId ?>}' />
+                    </a>
+                    <div class="recItemTitle product-name">
+                        <a class="recItemTitle product-name" href="${p.link_<?php echo $storeId ?>}" onmousedown="_gravity.push({type: 'event', eventType: 'REC_CLICK', itemId: '${p.itemid}'});">${p.title_<?php echo $storeId ?>}</a>
+                    </div>
+                    <div class="clearer"></div>
+                </li>
+                {/for}
+            </ul>
+            <div class="clearer"></div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        //<![CDATA[
+        _gravity.push({
+            type: "recommendation",
+            scenarioId: "<?php echo $this->getRecommendationType() ?>",
+            numberLimit: <?php echo $this->getRecommendationLimit() ?>,
+            storeId: <?php echo $storeId ?>,
+            <?php if($searchKeywords = $this->getSearchKeywords()) : ?>
+                <?php foreach($searchKeywords as $attributeCode => $value) : ?>
+                    <?php echo $attributeCode ?>: "<?php echo $value ?>",
+                <?php endforeach; ?>
+            <?php endif; ?>
+            resultNames: ["itemId", "title_<?php echo $storeId ?>", "link_<?php echo $storeId ?>", "image_link_<?php echo $storeId ?>"],
+            templating: {
+                targetElementId: "target-<?php echo $this->getBoxClass() ?>",
+                templateElementId: "template-<?php echo $this->getBoxClass() ?>"
+            }
+        });
+        //]]>
+    </script>
+<?php else : ?>
+    <?php $items = $this->getProductCollection(); ?>
+    <?php if (!is_null($items) && $items->count()) : ?>
+        <div class="block block-<?php echo $this->getBoxClass() ?>">
+            <div class="block-title">
+                <?php if($title = $this->getRecommendationTitle()) : ?>
+                    <strong><span><?php echo $title ?></span></strong>
+                <?php else : ?>
+                    <strong><span><?php echo $gravityHelper->__('Recommended Item(s)') ?></span></strong>
+                <?php endif; ?>
+            </div>
+            <div class="block-content">
+                <?php $_collectionSize = $items->count(); ?>
+                <?php $_columnCount = $this->getBoxColumnCount(); ?>
+                <?php $i = 0; foreach ($items as $_product): ?>
+                    <?php if ($i++%$_columnCount==0): ?>
+                        <ul class="products-grid gravity-<?php echo $this->getBoxClass() ?>-grid" style="background: none;">
+                    <?php endif ?>
+                    <li class="item<?php if(($i-1)%$_columnCount==0): ?> first<?php elseif($i%$_columnCount==0): ?> last<?php endif; ?>">
+                        <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" class="product-image" onmousedown="_gravity.push({ type: 'event', eventType: 'REC_CLICK', recId: '<?php echo $this->getRecommendationId() ?>', itemId: '<?php echo $_product->getId() ?>'});"><img src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(135); ?>" width="135" height="135" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" /></a>
+                        <h3 class="product-name"><a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($_product->getName(), null, true) ?>" onmousedown="_gravity.push({ type: 'event', eventType: 'REC_CLICK', recId: '<?php echo $this->getRecommendationId() ?>', itemId: '<?php echo $_product->getId() ?>'});"><?php echo $this->stripTags($_product->getName(), null, true) ?></a></h3>
+                        <?php echo $this->getPriceHtml($_product, true, '-' . $this->getBoxClass()) ?>
+                        <?php echo $this->getReviewsSummaryHtml($_product) ?>
+                    </li>
+                    <?php if ($i%$_columnCount==0 || $i==$_collectionSize): ?>
+                        </ul>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+                <script type="text/javascript">decorateGeneric($$('ul.products-grid'), ['odd','even','first','last'])</script>
+            </div>
+        </div>
+    <?php endif; ?>
+<?php endif; ?>

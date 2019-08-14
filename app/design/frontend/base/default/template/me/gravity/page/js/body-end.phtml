@@ -1,0 +1,31 @@
+<?php
+/**
+ * Class Me_Gravity_Block_Js_Gravity
+ *
+ * @category  Me
+ * @package   Me_Gravity
+ * @author    Attila Sági <sagi.attila@magevolve.com>
+ * @copyright 2014 Magevolve Ltd. (http://magevolve.com)
+ * @license   http://magevolve.com/terms-and-conditions Magevolve Ltd. License
+ * @link      http://magevolve.com
+ */
+?>
+<?php
+/**
+ * Gravity initialization script
+ *
+ * @see Me_Gravity_Block_Page_Js_Gravity
+ */
+?>
+<?php if($this->isEnabled() && $this->getGravityCustomerId() && $customerId = $this->getCustomerId()) : ?>
+    <script type="text/javascript">
+        //<![CDATA[
+        _gravity = _gravity || [];
+        _gravity.push({
+            type: "set",
+            //mode: "DEVELOP",
+            userId: "<?php echo $customerId ?>"
+        });
+        //]]>
+    </script>
+<?php endif; ?>

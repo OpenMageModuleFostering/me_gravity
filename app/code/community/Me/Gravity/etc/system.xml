@@ -1,0 +1,1076 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @category  Me
+ * @package   Me_Gravity
+ * @author    Attila Sági <sagi.attila@magevolve.com>
+ * @copyright 2015 Magevolve Ltd. (http://magevolve.com)
+ * @license   http://magevolve.com/terms-and-conditions Magevolve Ltd. License
+ * @link      http://magevolve.com
+ */
+-->
+<config>
+    <tabs>
+        <me_tab translate="label" module="me_gravity">
+            <label>Recommendations</label>
+            <sort_order>500</sort_order>
+        </me_tab>
+    </tabs>
+    <sections>
+        <gravity>
+            <class>separator-top</class>
+            <label>Gravity Reco</label>
+            <tab>me_tab</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>500</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <config translate="label">
+                    <label>Settings</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>10</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <enabled translate="label">
+                            <label>Enable Extension</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Enable extension.</comment>
+                        </enabled>
+                        <preview translate="label">
+                            <label>Enable Preview Mode</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Enabled Preview mode. In this case recommendation boxes are only visible if there is a special ?gr_reco_test=true parameter in the url. E.g.: http://example.com/example-product.html?gr_reco_test=true</comment>
+                        </preview>
+                        <api_user translate="label">
+                            <label>API Username</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>API user name in Gravity system.</comment>
+                        </api_user>
+                        <api_password translate="label">
+                            <label>API Password</label>
+                            <frontend_type>password</frontend_type>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>API password in Gravity system.</comment>
+                        </api_password>
+                        <api_url translate="label">
+                            <label>API URL</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>API communication URL.</comment>
+                        </api_url>
+                        <test translate="label">
+                            <label>Test Connection</label>
+                            <frontend_type>button</frontend_type>
+                            <frontend_model>me_gravity/adminhtml_system_config_form_test</frontend_model>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Press button to test connection.</comment>
+                        </test>
+                        <template translate="label">
+                            <label>Use Garvity Template</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>70</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>General display setting. If YES all boxes will use Gravity template.</comment>
+                        </template>
+                    </fields>
+                </config>
+                <export translate="label">
+                    <label>Export Products</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>20</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <catalog_path translate="label">
+                            <label>Catalog Export File Path</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Path where catalog export file will be saved. Example: "gravity_reco/" (path must be writeable)</comment>
+                        </catalog_path>
+                        <all translate="label">
+                            <label>Enable All Products Export</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>15</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Enable all products to export. Otherwise please select NO and set the maximum number. Note: there can be performance impact during this operation.</comment>
+                        </all>
+                        <max translate="label">
+                            <label>Maximum Products Export</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>The maximum number of products to be exported. This number must be between 1 and 1000.</comment>
+                            <validate>validate-number validate-number-range number-range-1-1000</validate>
+                            <depends><all>0</all></depends>
+                        </max>
+                        <additional translate="label">
+                            <label>Additional Attributes</label>
+                            <frontend_type>multiselect</frontend_type>
+                            <source_model>me_gravity/system_config_source_catalog_attributes</source_model>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Select additional attributes for catalog export.</comment>
+                        </additional>
+                        <only_salable translate="label">
+                            <label>Only Salable</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>In this case only those products will be exported which quantity higher than zero(is in stock). If your store doesn't use stock management choose YES.</comment>
+                        </only_salable>
+                        <catalog_cron translate="label">
+                            <label>Enable Scheduled Export</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <backend_model>me_gravity/system_config_backend_catalog_cron</backend_model>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Enable scheduled export job bby cron. Note: you must configure your server to run cron jobs.</comment>
+                        </catalog_cron>
+                        <catalog_cron_time translate="label">
+                            <label>Start Time</label>
+                            <frontend_type>time</frontend_type>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Daily start time for automatic catalog export via cron job.</comment>
+                            <depends><catalog_cron>1</catalog_cron></depends>
+                        </catalog_cron_time>
+                        <catalog translate="label">
+                            <label>Export Product Catalog</label>
+                            <frontend_type>button</frontend_type>
+                            <frontend_model>me_gravity/adminhtml_system_config_form_catalog</frontend_model>
+                            <sort_order>70</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>This will export product catalog and save in xml file. Note: there can be performance impact during this operation.</comment>
+                        </catalog>
+                    </fields>
+                </export>
+                <cutomer_export translate="label">
+                    <label>Export Customers</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>30</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <all translate="label">
+                            <label>Enable All Customers Export</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Enable all customer to export. Otherwise please select NO and set the maximum number. Note: there can be performance impact during this operation.</comment>
+                        </all>
+                        <max translate="label">
+                            <label>Maximum Customers Export</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>The maximum number of customers to be exported. This number must be between 1 and 1000.</comment>
+                            <validate>validate-number validate-number-range number-range-1-1000</validate>
+                            <depends><all>0</all></depends>
+                        </max>
+                        <additional translate="label">
+                            <label>Additional Attributes</label>
+                            <frontend_type>multiselect</frontend_type>
+                            <source_model>me_gravity/system_config_source_customer_attributes</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Select additional attributes for customer export.</comment>
+                        </additional>
+                        <customer translate="label">
+                            <label>Export Customers</label>
+                            <frontend_type>button</frontend_type>
+                            <frontend_model>me_gravity/adminhtml_system_config_form_customer</frontend_model>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>This will export customers. Note: there can be performance impact during this operation.</comment>
+                        </customer>
+                    </fields>
+                </cutomer_export>
+                <general_display translate="label">
+                    <label>General Pages Display</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>40</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <pages translate="label">
+                            <label>Enabled Pages</label>
+                            <frontend_type>multiselect</frontend_type>
+                            <source_model>me_gravity/system_config_source_layout_pages</source_model>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Pages on general layout recommendation boxes enabled.</comment>
+                        </pages>
+                        <best_heading translate="label">
+                            <label>Personal Best Box (PERSONAL_BEST)</label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </best_heading>
+                        <best_box translate="label">
+                            <label>Enable Personal Best Box</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Enable "Recommended for you" box on general page views.</comment>
+                        </best_box>
+                        <best_box_layout translate="label">
+                            <label>Personal Best Box Layout</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>me_gravity/system_config_source_layout_layout</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Select where "Recommended for you" box should be shown on general page views.</comment>
+                            <depends><best_box>1</best_box></depends>
+                        </best_box_layout>
+                        <best_box_title translate="label">
+                            <label>Personal Best Box Title</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>"Recommended for you" box title on general page views.</comment>
+                            <depends><best_box>1</best_box></depends>
+                        </best_box_title>
+                        <best_box_limit translate="label">
+                            <label>Personal Best Box Product Count</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Number of items show in "Recommended for you" box on general page views. This number must be between 1 and 10.</comment>
+                            <validate>validate-number validate-number-range number-range-1-10</validate>
+                            <depends><best_box>1</best_box></depends>
+                        </best_box_limit>
+                        <best_box_columns translate="label">
+                            <label>Personal Best Box Columns</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Columns count in "Recommended for you" box on general page views. This number must be between 1 and 6. It has no effect if box is in sidebar.</comment>
+                            <validate>validate-number validate-number-range number-range-1-6</validate>
+                            <depends>
+                                <best_box>1</best_box>
+                                <best_box_layout>content</best_box_layout>
+                            </depends>
+                        </best_box_columns>
+                        <history_heading translate="label">
+                            <label>History Box (PERSONAL_HISTORY)</label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <sort_order>55</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </history_heading>
+                        <history_box translate="label">
+                            <label>Enable History Box</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Enable "You viewed" box on general page views.</comment>
+                        </history_box>
+                        <history_box_layout translate="label">
+                            <label>History Box Layout</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>me_gravity/system_config_source_layout_layout</source_model>
+                            <sort_order>70</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Select where "You viewed" box should be shown on general page views.</comment>
+                            <depends><history_box>1</history_box></depends>
+                        </history_box_layout>
+                        <history_box_title translate="label">
+                            <label>History Box Title</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>80</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>"You viewed" box title on general page views.</comment>
+                            <depends><history_box>1</history_box></depends>
+                        </history_box_title>
+                        <history_box_limit translate="label">
+                            <label>History Box Product Count</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>90</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Number of items show in "You viewed" box on general page views. This number must be between 1 and 10.</comment>
+                            <validate>validate-number validate-number-range number-range-1-10</validate>
+                            <depends><history_box>1</history_box></depends>
+                        </history_box_limit>
+                        <history_box_columns translate="label">
+                            <label>History Box Columns</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Columns count in "You viewed" box on general page views. This number must be between 1 and 6. It has no effect if box is in sidebar.</comment>
+                            <validate>validate-number validate-number-range number-range-1-6</validate>
+                            <depends>
+                                <history_box>1</history_box>
+                                <history_box_layout>content</history_box_layout>
+                            </depends>
+                        </history_box_columns>
+                        <others_heading translate="label">
+                            <label>Currently Viewed Box (CURRENTLY_VIEWED)</label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <sort_order>105</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </others_heading>
+                        <others_box translate="label">
+                            <label>Enable Currently Viewed Box</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>110</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Enable "Others are looking at right now" box on general page views.</comment>
+                        </others_box>
+                        <others_box_layout translate="label">
+                            <label>Currently Viewed Box Layout</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>me_gravity/system_config_source_layout_layout</source_model>
+                            <sort_order>120</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Select where "Others are looking at right now" box should be shown on general page views.</comment>
+                            <depends><others_box>1</others_box></depends>
+                        </others_box_layout>
+                        <others_box_title translate="label">
+                            <label>Currently Viewed Box Title</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>130</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>"Others are looking at right now" box title on general page views.</comment>
+                            <depends><others_box>1</others_box></depends>
+                        </others_box_title>
+                        <others_box_limit translate="label">
+                            <label>Currently Viewed Box Product Count</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>140</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Number of items show in "Others are looking at right now" box on general page views. This number must be between 1 and 10.</comment>
+                            <validate>validate-number validate-number-range number-range-1-10</validate>
+                            <depends><others_box>1</others_box></depends>
+                        </others_box_limit>
+                        <others_box_columns translate="label">
+                            <label>Currently Viewed Box Columns</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>150</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Columns count in "Others are looking at right now" box on general page views. This number must be between 1 and 6. It has no effect if box is in sidebar.</comment>
+                            <validate>validate-number validate-number-range number-range-1-6</validate>
+                            <depends>
+                                <others_box>1</others_box>
+                                <others_box_layout>content</others_box_layout>
+                            </depends>
+                        </others_box_columns>
+                        <popular_heading translate="label">
+                            <label>Popular Box (POPULAR)</label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <sort_order>155</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </popular_heading>
+                        <popular_box translate="label">
+                            <label>Enable Popular Box</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>160</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Enable "Top products" box on general page views.</comment>
+                        </popular_box>
+                        <popular_box_layout translate="label">
+                            <label>Popular Box Layout</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>me_gravity/system_config_source_layout_layout</source_model>
+                            <sort_order>170</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Select where "Top products" box should be shown on general page views.</comment>
+                            <depends><popular_box>1</popular_box></depends>
+                        </popular_box_layout>
+                        <popular_box_title translate="label">
+                            <label>Popular Box Title</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>180</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>"Top products" box title on general page views.</comment>
+                            <depends><popular_box>1</popular_box></depends>
+                        </popular_box_title>
+                        <popular_box_limit translate="label">
+                            <label>Popular Box Product Count</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>190</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Number of items show in "Top products" box on general page views. This number must be between 1 and 10.</comment>
+                            <validate>validate-number validate-number-range number-range-1-10</validate>
+                            <depends><popular_box>1</popular_box></depends>
+                        </popular_box_limit>
+                        <popular_box_columns translate="label">
+                            <label>Popular Box Columns</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>200</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Columns count in "Top products" box on general page views. This number must be between 1 and 6. It has no effect if box is in sidebar.</comment>
+                            <validate>validate-number validate-number-range number-range-1-6</validate>
+                            <depends>
+                                <popular_box>1</popular_box>
+                                <popular_box_layout>content</popular_box_layout>
+                            </depends>
+                        </popular_box_columns>
+                    </fields>
+                </general_display>
+                <product_display translate="label">
+                    <label>Product Page Display</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>50</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <similar_heading translate="label">
+                            <label>Similar Box (ITEM_PAGE_SIMILAR)</label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </similar_heading>
+                        <similar_box translate="label">
+                            <label>Enable Similar Box</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Enable "You might also like" box on product page view.</comment>
+                        </similar_box>
+                        <similar_box_layout translate="label">
+                            <label>Similar Box Layout</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>me_gravity/system_config_source_layout_layout</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Select where "You might also like" box should be shown on product page view.</comment>
+                            <depends><similar_box>1</similar_box></depends>
+                        </similar_box_layout>
+                        <similar_box_title translate="label">
+                            <label>Similar Box Title</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>"You might also like" box title on product page view.</comment>
+                            <depends><similar_box>1</similar_box></depends>
+                        </similar_box_title>
+                        <similar_box_limit translate="label">
+                            <label>Similar Box Product Count</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Number of items show in "You might also like" box on product page view. This number must be between 1 and 10.</comment>
+                            <validate>validate-number validate-number-range number-range-1-10</validate>
+                            <depends><similar_box>1</similar_box></depends>
+                        </similar_box_limit>
+                        <similar_box_columns translate="label">
+                            <label>Similar Box Columns</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Columns count in "You might also like" box on product page view. This number must be between 1 and 6. It has no effect if box is in sidebar.</comment>
+                            <validate>validate-number validate-number-range number-range-1-6</validate>
+                            <depends>
+                                <similar_box>1</similar_box>
+                                <similar_box_layout>content</similar_box_layout>
+                            </depends>
+                        </similar_box_columns>
+                        <personal_heading translate="label">
+                            <label>Personal Box (ITEM_PAGE_PERSONAL)</label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <sort_order>55</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </personal_heading>
+                        <personal_box translate="label">
+                            <label>Enable Personal Box</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Enable "Recommended for you" box on product page view.</comment>
+                        </personal_box>
+                        <personal_box_layout translate="label">
+                            <label>Personal Box Layout</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>me_gravity/system_config_source_layout_layout</source_model>
+                            <sort_order>70</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Select where "Recommended for you" box should be shown on product page view.</comment>
+                            <depends><personal_box>1</personal_box></depends>
+                        </personal_box_layout>
+                        <personal_box_title translate="label">
+                            <label>Personal Box Title</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>80</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>"Recommended for you" box title on product page view.</comment>
+                            <depends><personal_box>1</personal_box></depends>
+                        </personal_box_title>
+                        <personal_box_limit translate="label">
+                            <label>Personal Box Product Count</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>90</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Number of items show in "Recommended for you" box on product page view. This number must be between 1 and 10.</comment>
+                            <validate>validate-number validate-number-range number-range-1-10</validate>
+                            <depends><personal_box>1</personal_box></depends>
+                        </personal_box_limit>
+                        <personal_box_columns translate="label">
+                            <label>Personal Box Columns</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Columns count in "Recommended for you" box on product page view. This number must be between 1 and 6. It has no effect if box is in sidebar.</comment>
+                            <validate>validate-number validate-number-range number-range-1-6</validate>
+                            <depends>
+                                <personal_box>1</personal_box>
+                                <personal_box_layout>content</personal_box_layout>
+                            </depends>
+                        </personal_box_columns>
+                        <accessories_heading translate="label">
+                            <label>Accessories Box (ITEM_PAGE_ACCESSORIES)</label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <sort_order>105</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </accessories_heading>
+                        <accessories_box translate="label">
+                            <label>Enable Accessories Box</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>110</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Enable "You might also need" box on product page view.</comment>
+                        </accessories_box>
+                        <accessories_box_layout translate="label">
+                            <label>Accessories Box Layout</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>me_gravity/system_config_source_layout_layout</source_model>
+                            <sort_order>120</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Select where "You might also need" box should be shown on product page view.</comment>
+                            <depends><accessories_box>1</accessories_box></depends>
+                        </accessories_box_layout>
+                        <accessories_box_title translate="label">
+                            <label>Accessories Box Title</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>130</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>"You might also need" box title on product page view.</comment>
+                            <depends><accessories_box>1</accessories_box></depends>
+                        </accessories_box_title>
+                        <accessories_box_limit translate="label">
+                            <label>Accessories Box Product Count</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>140</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Number of items show in "You might also need" box on product page view. This number must be between 1 and 10.</comment>
+                            <validate>validate-number validate-number-range number-range-1-10</validate>
+                            <depends><accessories_box>1</accessories_box></depends>
+                        </accessories_box_limit>
+                        <accessories_box_columns translate="label">
+                            <label>Accessories Box Columns</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>150</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Columns count in "You might also need" box on product page view. This number must be between 1 and 6. It has no effect if box is in sidebar.</comment>
+                            <validate>validate-number validate-number-range number-range-1-6</validate>
+                            <depends>
+                                <accessories_box>1</accessories_box>
+                                <accessories_box_layout>content</accessories_box_layout>
+                            </depends>
+                        </accessories_box_columns>
+                    </fields>
+                </product_display>
+                <category_display translate="label">
+                    <label>Category Page Display</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>60</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <personal_heading translate="label">
+                            <label>Personal Box (CATEGORY_PAGE_PERSONAL)</label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </personal_heading>
+                        <personal_box translate="label">
+                            <label>Enable Personal Box</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Enable "Recommended for you" box on category page view.</comment>
+                        </personal_box>
+                        <personal_box_layout translate="label">
+                            <label>Personal Box Layout</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>me_gravity/system_config_source_layout_layout</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Select where "Recommended for you" box should be shown on category page view.</comment>
+                            <depends><personal_box>1</personal_box></depends>
+                        </personal_box_layout>
+                        <personal_box_title translate="label">
+                            <label>Personal Box Title</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>"Recommended for you" box title on category page view.</comment>
+                            <depends><personal_box>1</personal_box></depends>
+                        </personal_box_title>
+                        <personal_box_limit translate="label">
+                            <label>Personal Box Product Count</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Number of items show in "Recommended for you" box on category page view. This number must be between 1 and 10.</comment>
+                            <validate>validate-number validate-number-range number-range-1-10</validate>
+                            <depends><personal_box>1</personal_box></depends>
+                        </personal_box_limit>
+                        <personal_box_columns translate="label">
+                            <label>Personal Box Columns</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Columns count in "Recommended for you" box on category page view. This number must be between 1 and 6. It has no effect if box is in sidebar.</comment>
+                            <validate>validate-number validate-number-range number-range-1-6</validate>
+                            <depends>
+                                <personal_box>1</personal_box>
+                                <personal_box_layout>content</personal_box_layout>
+                            </depends>
+                        </personal_box_columns>
+                        <top_heading translate="label">
+                            <label>Top Box (CATEGORY_PAGE_POP)</label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <sort_order>55</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </top_heading>
+                        <top_box translate="label">
+                            <label>Enable Top Box</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Enable "Top products" box on category page view.</comment>
+                        </top_box>
+                        <top_box_layout translate="label">
+                            <label>Top Box Layout</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>me_gravity/system_config_source_layout_layout</source_model>
+                            <sort_order>70</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Select where "Top products" box should be shown on category page view.</comment>
+                            <depends><top_box>1</top_box></depends>
+                        </top_box_layout>
+                        <top_box_title translate="label">
+                            <label>Top Box Title</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>80</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>"Top products" box title on category page view.</comment>
+                            <depends><top_box>1</top_box></depends>
+                        </top_box_title>
+                        <top_box_limit translate="label">
+                            <label>Top Box Product Count</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>90</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Number of items show in "Top products" box on category page view. This number must be between 1 and 10.</comment>
+                            <validate>validate-number validate-number-range number-range-1-10</validate>
+                            <depends><top_box>1</top_box></depends>
+                        </top_box_limit>
+                        <top_box_columns translate="label">
+                            <label>Top Box Columns</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Columns count in "Top products" box on category page view. This number must be between 1 and 6. It has no effect if box is in sidebar.</comment>
+                            <validate>validate-number validate-number-range number-range-1-6</validate>
+                            <depends>
+                                <top_box>1</top_box>
+                                <top_box_layout>content</top_box_layout>
+                            </depends>
+                        </top_box_columns>
+                    </fields>
+                </category_display>
+                <search_display translate="label">
+                    <label>Search Result Page Display</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>70</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <search_heading translate="label">
+                            <label>Recommendation Box (LISTING_PAGE)</label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </search_heading>
+                        <search_box translate="label">
+                            <label>Enable Recommendation Box</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Enable "Recommended for you" box on search result page view.</comment>
+                        </search_box>
+                        <search_box_layout translate="label">
+                            <label>Recommendation Box Layout</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>me_gravity/system_config_source_layout_layout</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Select where "Recommended for you" box should be shown on search result page view.</comment>
+                            <depends><search_box>1</search_box></depends>
+                        </search_box_layout>
+                        <search_box_title translate="label">
+                            <label>Recommendation Box Title</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>"Recommended for you" box title on search result page view.</comment>
+                            <depends><search_box>1</search_box></depends>
+                        </search_box_title>
+                        <search_box_limit translate="label">
+                            <label>Recommendation Box Product Count</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Number of items show in "Recommended for you" box on search result page view. This number must be between 1 and 10.</comment>
+                            <validate>validate-number validate-number-range number-range-1-10</validate>
+                            <depends><search_box>1</search_box></depends>
+                        </search_box_limit>
+                        <search_box_columns translate="label">
+                            <label>Recommendation Box Columns</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Columns count in "Recommended for you" box on search result page view. This number must be between 1 and 6. It has no effect if box is in sidebar.</comment>
+                            <validate>validate-number validate-number-range number-range-1-6</validate>
+                            <depends>
+                                <search_box>1</search_box>
+                                <search_box_layout>content</search_box_layout>
+                            </depends>
+                        </search_box_columns>
+                    </fields>
+                </search_display>
+                <cart_display translate="label">
+                    <label>Cart Page Display</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>80</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <cart_heading translate="label">
+                            <label>Cart Box (CART_PAGE)</label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </cart_heading>
+                        <cart_box translate="label">
+                            <label>Enable Cart Box</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Enable "Others also bought" box on cart page view.</comment>
+                        </cart_box>
+                        <cart_box_layout translate="label">
+                            <label>Cart Box Layout</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>me_gravity/system_config_source_layout_layout</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Select where "Others also bought" box should be shown on cart page view.</comment>
+                            <depends><cart_box>1</cart_box></depends>
+                        </cart_box_layout>
+                        <cart_box_title translate="label">
+                            <label>Cart Box Title</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>"Others also bought" box title on cart page view.</comment>
+                            <depends><cart_box>1</cart_box></depends>
+                        </cart_box_title>
+                        <cart_box_limit translate="label">
+                            <label>Cart Box Product Count</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Number of items show in "Others also bought" box on cart page view. This number must be between 1 and 10.</comment>
+                            <validate>validate-number validate-number-range number-range-1-10</validate>
+                            <depends><cart_box>1</cart_box></depends>
+                        </cart_box_limit>
+                        <cart_box_columns translate="label">
+                            <label>Cart Box Columns</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Columns count in "Others also bought" box on cart page view. This number must be between 1 and 6. It has no effect if box is in sidebar.</comment>
+                            <validate>validate-number validate-number-range number-range-1-6</validate>
+                            <depends>
+                                <cart_box>1</cart_box>
+                                <cart_box_layout>content</cart_box_layout>
+                            </depends>
+                        </cart_box_columns>
+                    </fields>
+                </cart_display>
+                <sync translate="label">
+                    <label>Synchronization</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>90</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <customer_update translate="label">
+                            <label>Enable Gravity Customer Update</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>If customer is saved in backend it will be updated in Gravity.</comment>
+                        </customer_update>
+                        <product_update translate="label">
+                            <label>Enable Gravity Product Update</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>If product is saved in backend it will be updated in Gravity.</comment>
+                        </product_update>
+                        <customer_registration translate="label">
+                            <label>Enable Gravity Customer Registration</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>If customer is registered on frontend it will be added in Gravity.</comment>
+                        </customer_registration>
+                    </fields>
+                </sync>
+                <debug translate="label">
+                    <label>Debug</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>100</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <log translate="label">
+                            <label>Enable Debug</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Enable debug. In this case all transactions will be logged in /var/gravity.log.</comment>
+                        </log>
+                    </fields>
+                </debug>
+            </groups>
+        </gravity>
+    </sections>
+</config>

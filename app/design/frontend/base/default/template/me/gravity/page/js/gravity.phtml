@@ -18,6 +18,28 @@
  * @see Me_Gravity_Block_Page_Js_Gravity
  */
 ?>
+<?php
+$store				=Mage::app()->getStore();
+$collection = Mage::getResourceModel('catalog/category_collection')
+                ->setStoreId($store->getId())
+                ->addNameToResult();
+$layer = Mage::getSingleton('catalog/layer');
+if(isset($layer)){
+$_category = $layer->getCurrentCategory();
+$currentCategoryId= $_category->getId();
+$_cat = Mage::getModel('catalog/category')->load($currentCategoryId);
+$structure = preg_split('#/+#', $_cat->getPath());
+for($j=0; $j<count($structure); $j=$j+1){
+	$structure[$j]=$collection->getItemById($structure[$j])->getName();
+}
+$currentCategoryPath = implode("/", $structure);
+
+?>
+		<script>
+	var _gravity = _gravity || [];
+	_gravity.push({type: 'set', categoryPath: '<?=$currentCategoryPath?>'});
+</script>
+<?php } ?>
 <?php if ($this->isEnabled() && $this->getGravityCustomerId()) : ?>
     <?php $gravityHelper = $this->getGravityHelper(); ?>
     <?php if ($this->isCustomJsEnabled()) : ?>

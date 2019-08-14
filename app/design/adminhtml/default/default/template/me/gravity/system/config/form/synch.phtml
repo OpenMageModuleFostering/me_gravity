@@ -1,0 +1,111 @@
+<?php
+
+include("GravityClient.php");
+use Magento\Framework\Event\ObserverInterface;
+use Magento\Framework\Message\ManagerInterface as MessageManager;
+use Gravity\GravityItem;
+use Gravity\GravityClient;
+use Gravity\GravityClientConfig;
+use Gravity\GravityException;
+use Gravity\GravityNameValue;
+use Gravity\GravityUser;
+use Gravity\Message;
+
+	function resync() {
+		$store				=Mage::app()->getStore();
+		$baseUrl = Mage::app()->getStore()->getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB);
+		$apiUser 			= Mage::getStoreConfig('gravity/config/api_user', $store);
+		$apiPassword 		= Mage::getStoreConfig('gravity/config/api_password', $store);
+		$apiUrl 			= Mage::getStoreConfig('gravity/config/api_url', $store);
+		$inStock 			= Mage::getStoreConfig('gravity/sync/only_salable', $store);
+		$config 			= new GravityClientConfig();
+		$config->user 		= $apiUser;
+		$config->remoteUrl 	= $apiUrl;
+		$config->password 	= $apiPassword; 
+		$client 			= new GravityClient($config);
+		$products = Mage::getModel('catalog/product')->getCollection();
+		$collection = Mage::getResourceModel('catalog/category_collection')
+                ->setStoreId($store->getId())
+                ->addNameToResult();
+		$itemCollection 	= array();
+		foreach($products as $prod) {
+			$product = Mage::getModel('catalog/product')->load($prod->getId());
+			if($inStock==1 && $product->getStockItem()->getQty()<1){
+				
+			}
+			elseif(count($product->getCategoryIds())==0){
+				
+			}
+			else{
+			$item 			= new GravityItem();
+			$item->itemId	= $product->getId();
+			$item->title 	= $product->getName();
+			if($product->getVisibility()==1){
+			$item->hidden = true;
+			}else {
+				$item->hidden=false;
+			}
+			$cats = $product->getCategoryIds();
+			$url =$baseUrl.$product->getUrlPath();
+			$imageUrl = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).'catalog/product'.$product->getImage();
+			$item->nameValues = array(new GravityNameValue('Price', $product->getFinalPrice()),
+					new GravityNameValue('URL', $url),
+					new GravityNameValue('storeId', $store->getStoreId()),
+					new GravityNameValue('Image', $imageUrl),
+					new GravityNameValue('Description', $product->getDescription()));
+			
+			foreach ($cats as $category_id) {
+			
+			$_cat = Mage::getModel('catalog/category')->load($category_id) ;
+			$structure = preg_split('#/+#', $_cat->getPath());
+			for($j=0; $j<count($structure); $j=$j+1){
+				$structure[$j]=$collection->getItemById($structure[$j])->getName();
+			}
+			array_push($item->nameValues, new GravityNameValue('categoryPath', implode("/", $structure)));
+			array_push($item->nameValues, new GravityNameValue('categoryId', $category_id));
+			}
+			
+			array_push($itemCollection, $item);	
+		}	}		
+	$chunkedItems 		= array_chunk($itemCollection, 100);
+	$chunkedItemsNum 	= count($chunkedItems);
+	for($i=0; $i<$chunkedItemsNum; $i++){
+		try {
+			$client->addItems($chunkedItems[$i], true);
+		} catch (GravityException $e) {
+		}
+	}		
+		$users = mage::getModel('customer/customer')->getCollection();
+		$gravityUserCollection = array();
+		foreach ($users as $user){
+			$user = Mage::getModel('customer/customer')->load($user->getId());
+			$gravityUser 			=	new GravityUser();
+			$gravityUser->userId	=	$user->getId();
+			$gravityUser->hidden	= 	false;
+			if($user->getGender()==1){
+				$gender = 'male';
+			}elseif($user->getGender()==2){
+				$gender = 'female';
+			}else{
+				$gender = 'not specified';
+			}
+			$gravityUser->nameValues = array(new GravityNameValue('name', $user->getName()),
+						new GravityNameValue('sex', $gender),
+					    new GravityNameValue('email', $user->getEmail()));
+			array_push($gravityUserCollection, $gravityUser);
+		}
+		$chunkedUsers 		= array_chunk($gravityUserCollection, 100);
+		$chunkedUsersNum 	= count($chunkedUsers);
+		for($i=0; $i<$chunkedUsersNum; $i++){
+			try {
+				$client->addUsers($chunkedUsers[$i], true);
+			} catch (GravityException $e) {
+			}
+		}
+	}
+  if (isset($_GET['hello'])) {
+    resync();
+  }
+?>
+<a href='index.php?hello=true'><input type="button" value="Export Catalog" class="form-button"/></a>
+

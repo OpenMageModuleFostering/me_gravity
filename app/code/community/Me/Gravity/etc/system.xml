@@ -82,7 +82,7 @@
                             <show_in_store>1</show_in_store>
                             <comment>API communication URL.</comment>
                         </api_url>
-                        <enabled_js translate="label">
+                      <!--  <enabled_js translate="label">
                             <label>Enable Custom Yusp Javascript</label>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_yesno</source_model>
@@ -103,7 +103,7 @@
                             <depends>
                                 <enabled_js>1</enabled_js>
                             </depends>
-                        </custom_js>
+                        </custom_js> -->
                         <test translate="label">
                             <label>Test Connection</label>
                             <frontend_type>button</frontend_type>
@@ -114,7 +114,7 @@
                             <show_in_store>1</show_in_store>
                             <comment>Click here to check the connection between your Yusp account and Magento extension.</comment>
                         </test>
-                        <template translate="label">
+                      <!--  <template translate="label">
                             <label>Use Yusp Template</label>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_yesno</source_model>
@@ -133,10 +133,10 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <comment>General recommendation setting. If switched to YES, bulk recommendation will be enabled.</comment>
-                        </bulk>
+                        </bulk>-->
                     </fields>
                 </config>
-                <export translate="label">
+            <!--   <export translate="label">
                     <label>Export Products</label>
                     <frontend_type>text</frontend_type>
                     <sort_order>20</sort_order>
@@ -300,7 +300,7 @@
                             <comment>Export your customers in an XML file. Note: this operation can impact your site’s performance.</comment>
                         </customer>
                     </fields>
-                </cutomer_export>
+                </cutomer_export>-->
                 <general_display translate="label">
                     <label>General Pages Display</label>
                     <frontend_type>text</frontend_type>
@@ -921,7 +921,7 @@
                         </top_box_columns>
                     </fields>
                 </category_display>
-                <search_display translate="label">
+           <!--     <search_display translate="label">
                     <label>Search Result Page Display</label>
                     <frontend_type>text</frontend_type>
                     <sort_order>70</sort_order>
@@ -995,7 +995,7 @@
                             </depends>
                         </search_box_columns>
                     </fields>
-                </search_display>
+                </search_display>-->
                 <cart_display translate="label">
                     <label>Cart Page Display</label>
                     <frontend_type>text</frontend_type>
@@ -1078,6 +1078,36 @@
                     <show_in_website>1</show_in_website>
                     <show_in_store>1</show_in_store>
                     <fields>
+						<!--<additional translate="label">
+                            <label>Additional Attributes</label>
+                            <frontend_type>multiselect</frontend_type>
+                            <source_model>me_gravity/system_config_source_catalog_attributes</source_model>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>Select additional attributes for catalog export.</comment>
+                        </additional>-->
+						<resynch translate="label">
+                            <label>Synchronization</label>
+                            <frontend_type>button</frontend_type>
+                            <frontend_model>me_gravity/adminhtml_system_config_form_synch</frontend_model>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Every user and product item will be exported or updated in your database.</comment>
+                        </resynch>
+						<only_salable translate="label">
+                            <label>Only In-stock</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>If switched to YES, only products with quantities exceeding zero will be exported. If your store doesn't use stock management, also choose YES.</comment>
+                        </only_salable>
                         <customer_update translate="label">
                             <label>Enable Yusp Customer Update</label>
                             <frontend_type>select</frontend_type>
@@ -1110,10 +1140,84 @@
                         </customer_registration>
                     </fields>
                 </sync>
-                <debug translate="label">
-                    <label>Debug</label>
+				<advanced translate="label">
+                    <label>Advanced</label>
                     <frontend_type>text</frontend_type>
                     <sort_order>100</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+					<fields>
+						<enabled_js translate="label">
+                            <label>Enable Custom Yusp Javascript</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Please select YES if you want to edit or customize the Yusp extension's main javascript.</comment>
+                        </enabled_js>
+                        <custom_js translate="label">
+                            <label>Custom Yusp Javascript</label>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>21</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment><![CDATA[<strong> Important!</strong> Here you can edit the main Yusp javascript. <strong>You have to replace</strong> the two occurrences of the "magento" string in your custom javascript with your Yusp API username above!]]></comment>
+                            <depends>
+                                <enabled_js>1</enabled_js>
+                            </depends>
+                        </custom_js>
+					<!--	<template translate="label">
+                            <label>Use Yusp Template</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>General display setting. If switched to YES, all boxes will use a Yusp template.</comment>
+                        </template>-->
+						<bulk translate="label">
+                            <label>Enable Bulk Recommendation</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>General recommendation setting. If switched to YES, bulk recommendation will be enabled.</comment>
+                        </bulk>
+					</fields>
+					<fields>
+                        <log translate="label">
+                            <label>Enable Debug</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>Enable debug. In this case all transactions will be logged in /var/gravity.log.</comment>
+                        </log>
+                        <version translate="label">
+                            <label>Extension Version</label>
+                            <frontend_type>text</frontend_type>
+                            <frontend_model>me_gravity/adminhtml_system_config_form_version</frontend_model>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </version>
+                    </fields>
+                </advanced>
+
+                <!--<debug translate="label">
+                    <label>Debug</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>110</sort_order>
                     <show_in_default>1</show_in_default>
                     <show_in_website>0</show_in_website>
                     <show_in_store>0</show_in_store>
@@ -1138,7 +1242,7 @@
                             <show_in_store>0</show_in_store>
                         </version>
                     </fields>
-                </debug>
+                </debug>-->
             </groups>
         </gravity>
     </sections>

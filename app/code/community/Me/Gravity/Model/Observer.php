@@ -20,6 +20,8 @@ class Me_Gravity_Model_Observer
      *
      * @var array
      */
+	 
+	
     protected $_productRecommendationTypes = array(
         'similar' => Me_Gravity_Model_Method_Request::PRODUCT_PAGE_SIMILAR,
         'personal' => Me_Gravity_Model_Method_Request::PRODUCT_PAGE_PERSONAL,
@@ -54,6 +56,7 @@ class Me_Gravity_Model_Observer
      * @var array|null
      */
     protected $_filters = null;
+
 
     /**
      * Add Gravity block to catalog product view
@@ -358,13 +361,19 @@ class Me_Gravity_Model_Observer
 
             $customer = $observer->getCustomer();
             if (!is_null($customer) && $customer->getId()) {
-
+				if($customer->getGender()==1){
+				$gender = 'male';
+			}elseif($customer->getGender()==2){
+				$gender = 'female';
+			}else{
+				$gender = 'not specified';
+			}
                 $parameters = array(
                     'type' => Me_Gravity_Model_Method_Request::EVENT_TYPE_CUSTOMER_UPDATE,
                     'userid' => $customer->getId(),
                     'email' => $customer->getEmail(),
-                    'firstname' => $customer->getFirstname(),
-                    'lastname' => $customer->getLastname()
+				   'name' => $customer->getName(),
+				   'sex' => $gender
                 );
 
                 Mage::getModel('me_gravity/method_request')->sendRequest(
@@ -385,20 +394,63 @@ class Me_Gravity_Model_Observer
 
         return $this;
     }
+	
+	
+	public function gravityCustomerSave(arien_Event_Observer $observer){
+		if (!$this->_getGravityHelper()->isFullyEnabled() || !$this->_getGravityHelper()->getCustomerUpdateEnabled()) {
+            return false;
+        }
+		try {
 
+            $customer = $observer->getCustomer();
+            if (!is_null($customer) && $customer->getId()) {
+
+                $parameters = array(
+                    'type' => Me_Gravity_Model_Method_Request::EVENT_TYPE_CUSTOMER_UPDATE
+                );
+
+                $exportModel = Mage::getModel('me_gravity/customers');
+                foreach ($exportModel->getExportHeaders() as $attribute) {
+                    if ($attribute == 'userid') {
+                        $parameters[$attribute] = $customer->getId();
+                    } elseif ($attributeValue = $exportModel->getAttributeValueByCode($customer, $attribute)) {
+                        $parameters[$attribute] = $attributeValue;
+                    }
+                }
+
+                Mage::getModel('me_gravity/method_request')->sendRequest(
+                    Me_Gravity_Model_Method_Request::EVENT_TYPE_UPDATE,
+                    $parameters
+                );
+
+            }
+
+        } catch (Mage_Core_Exception $e) {
+            $this->_getGravityHelper()->getLogger($e->getMessage());
+        } catch (Exception $e) {
+            $this->_getGravityHelper()->getLogger(
+                $e->getMessage(),
+                $this->_getGravityHelper()->__('An error occurred while sending customer update event to Gravity.')
+            );
+        }
+
+        return $this;
+	}
     /**
      * Gravity product update event observer
      *
      * @param Varien_Event_Observer $observer observer
      * @return $this
      */
-    public function gravityProductUpdate(Varien_Event_Observer $observer)
-    {
-        if (!$this->_getGravityHelper()->isFullyEnabled() || !$this->_getGravityHelper()->getProductUpdateEnabled()) {
+	 
+	 
+	public function gravityProductDelete(Varien_Event_Observer $observer){
+		
+		if (!$this->_getGravityHelper()->isFullyEnabled() || !$this->_getGravityHelper()->getProductUpdateEnabled()) {
             return false;
         }
-
-        try {
+		
+		try {
             $storeId = Mage::app()->getDefaultStoreView()->getId();
             $param = Mage::app()->getRequest()->getParam('store');
             if (isset($param) && $param) {
@@ -414,7 +466,7 @@ class Me_Gravity_Model_Observer
                     'type' => Me_Gravity_Model_Method_Request::EVENT_TYPE_PRODUCT_UPDATE,
                     'itemid' => $product->getId(),
                     'title' => htmlspecialchars($product->getName()),
-                    'hidden' => ($product->getVisibility() == Mage_Catalog_Model_Product_Visibility::VISIBILITY_NOT_VISIBLE) ? 'true' : 'false',
+                    'hidden' => true,
                     'link' => $productUrl ? $productUrl : $product->getProductUrl(),
                     'image_link' => htmlspecialchars($this->_getCatalogBaseMediaUrl() . $product->getImage()),
                     'description' => htmlspecialchars($product->getDescription()),
@@ -422,6 +474,81 @@ class Me_Gravity_Model_Observer
                     'categoryPath' => implode(',', $exportModel->getCategoryPath($product->getCategoryIds(), $storeId)),
                     'categoryId' => implode(',', $product->getCategoryIds()),
                     'storeId' => $storeId
+                );
+
+                $additionalParameters = $exportModel->getAdditionalAttributesXml($product, false, $storeId);
+                if ($additionalParameters) {
+                    $parameters = array_merge($parameters, $additionalParameters);
+                }
+
+                Mage::getModel('me_gravity/method_request')->sendRequest(
+                    Me_Gravity_Model_Method_Request::EVENT_TYPE_UPDATE,
+                    $parameters
+                );
+
+            }
+
+        } catch (Mage_Core_Exception $e) {
+            $this->_getGravityHelper()->getLogger($e->getMessage());
+        } catch (Exception $e) {
+            $this->_getGravityHelper()->getLogger(
+                $e->getMessage(),
+                $this->_getGravityHelper()->__('An error occurred while sending product update event to Gravity.')
+            );
+        }
+
+        return $this;
+		
+	}
+    public function gravityProductUpdate(Varien_Event_Observer $observer)
+    {
+		
+
+        if (!$this->_getGravityHelper()->isFullyEnabled() || !$this->_getGravityHelper()->getProductUpdateEnabled()) {
+            return false;
+        }
+
+        try {
+            $storeId = Mage::app()->getDefaultStoreView()->getId();
+            $param = Mage::app()->getRequest()->getParam('store');
+            if (isset($param) && $param) {
+                $storeId = $param;
+            }
+			$collection = Mage::getResourceModel('catalog/category_collection')
+                ->setStoreId($storeId)
+                ->addNameToResult();
+            $prod = $observer->getProduct();
+			$product = Mage::getModel('catalog/product')->load($prod->getId());
+			$hidden = ($product->getVisibility() == Mage_Catalog_Model_Product_Visibility::VISIBILITY_NOT_VISIBLE) ? 'true' : 'false';
+            if (!is_null($product) && $product->getId()) {
+				$cats = $product->getCategoryIds();
+				if(count($cats)==0){
+					$hidden = 'true';
+				}
+				$catPath = array();
+				foreach ($cats as $category_id) {
+					$_cat = Mage::getModel('catalog/category')->load($category_id) ;
+					$structure = preg_split('#/+#', $_cat->getPath());
+					for($j=0; $j<count($structure); $j=$j+1){
+						$structure[$j]=$collection->getItemById($structure[$j])->getName();
+					}
+					array_push($catPath, implode("/", $structure));
+				}
+                $baseUrl = Mage::app()->getStore($storeId)->getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK);
+                $exportModel = Mage::getModel('me_gravity/products');
+                $productUrl = htmlspecialchars($baseUrl . $product->getUrlPath());
+                $parameters = array(
+                    'type' => Me_Gravity_Model_Method_Request::EVENT_TYPE_PRODUCT_UPDATE,
+                    'itemid' => $product->getId(),
+                    'title' => array(htmlspecialchars($product->getName())),
+                    'hidden' => $hidden,
+                    'URL' => array($productUrl ? $productUrl : $product->getProductUrl()),
+                    'Image' => array(htmlspecialchars($this->_getCatalogBaseMediaUrl() . $product->getImage())),
+                    'Price' => array($product->getFinalPrice()),
+                    'categoryPath' => $catPath,
+					'categoryId' => $cats,
+                    'storeId' => array($storeId),
+					'Description'=> array($product->getDescription())
                 );
 
                 $additionalParameters = $exportModel->getAdditionalAttributesXml($product, false, $storeId);

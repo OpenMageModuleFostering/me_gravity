@@ -197,6 +197,7 @@ class Me_Gravity_Model_Export_Catalog_Product extends Me_Gravity_Model_Export_Ab
 
             foreach ($collection as $category) {
                 $structure = preg_split('#/+#', $category->getPath());
+				
                 $pathSize = count($structure);
                 if ($pathSize > 1) {
                     $path = array();

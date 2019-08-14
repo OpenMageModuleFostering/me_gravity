@@ -12,7 +12,7 @@
 <config>
     <modules>
         <Me_Gravity>
-            <version>1.0.2.1</version>
+            <version>1.1.0.0</version>
         </Me_Gravity>
     </modules>
     <global>
@@ -74,6 +74,14 @@
                     </me_gravity_update_cart_after>
                 </observers>
             </checkout_cart_update_items_before>
+			<customer_save_after>
+				<observers>
+					<me_gravity_customer_save>
+						<class>me_gravity/observer</class>
+						<method>gravityCustomerSave</method>
+					</me_gravity_customer_save>
+				</observers>
+			</customer_save_after>
             <sales_order_place_after>
                 <observers>
                     <me_gravity_order_place_after>
@@ -129,6 +137,14 @@
                     </me_gravity_customer_save_after>
                 </observers>
             </customer_save_after>
+			<catalog_product_delete_after>
+				<observers>
+                    <me_gravity_product_delete_after>
+                        <class>me_gravity/observer</class>
+                        <method>gravityProductDelete</method>
+                    </me_gravity_product_delete_after>
+                </observers>
+			</catalog_product_delete_after>
             <catalog_product_save_after>
                 <observers>
                     <me_gravity_product_save_after>
@@ -137,6 +153,14 @@
                     </me_gravity_product_save_after>
                 </observers>
             </catalog_product_save_after>
+			<catalog_product_save_before>
+                <observers>
+                    <me_gravity_product_save_after>
+                        <class>me_gravity/observer</class>
+                        <method>gravityProductUpdate</method>
+                    </me_gravity_product_save_after><!--új-->
+                </observers>
+            </catalog_product_save_before>
         </events>
     </adminhtml>
     <crontab>

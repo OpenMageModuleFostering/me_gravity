@@ -15,6 +15,15 @@
  * @see Me_Gravity_Block_Widget_Boxes_Widget
  */
 ?>
+<?php
+$layer = Mage::getSingleton('catalog/layer');
+if(isset($layer)){
+$_category = $layer->getCurrentCategory();
+$currentCategoryId= $_category->getId();
+}
+else{
+$currentCategoryId = '';
+}?>
 <?php $gravityHelper = $this->getGravityHelper(); ?>
 <?php if ($this->getTemplateType()) : ?>
     <?php $storeId = $this->getStoreId(); ?>
@@ -50,6 +59,7 @@
             type: "recommendation",
             scenarioId: "<?php echo $this->getRecommendationType() ?>",
             numberLimit: <?php echo $this->getRecommendationLimit() ?>,
+			categoryId: "<?php echo $currentCategoryId ?>",
             storeId: <?php echo $storeId ?>,
             resultNames: ["itemId", "title_<?php echo $storeId ?>", "link_<?php echo $storeId ?>", "image_link_<?php echo $storeId ?>"],
             templating: {

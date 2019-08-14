@@ -41,7 +41,7 @@ class Me_Gravity_Helper_Data extends Mage_Core_Helper_Data
      *
      * @var string
      */
-    const XML_PATH_DEBUG = 'gravity/debug/log';
+    const XML_PATH_DEBUG = 'gravity/advanced/log';
 
     /**
      * Path to store config API username
@@ -62,14 +62,14 @@ class Me_Gravity_Helper_Data extends Mage_Core_Helper_Data
      *
      * @var string
      */
-    const XML_PATH_CUSTOM_JS_ENABLED = 'gravity/config/enabled_js';
+    const XML_PATH_CUSTOM_JS_ENABLED = 'gravity/advanced/enabled_js';
 
     /**
      * Path to store config custom Gravity JS
      *
      * @var string
      */
-    const XML_PATH_CUSTOM_JS = 'gravity/config/custom_js';
+    const XML_PATH_CUSTOM_JS = 'gravity/advanced/custom_js';
 
     /**
      * Path to store config catalog export path
@@ -83,14 +83,14 @@ class Me_Gravity_Helper_Data extends Mage_Core_Helper_Data
      *
      * @var string
      */
-    const XML_PATH_USE_TEMPLATE = 'gravity/config/template';
+    const XML_PATH_USE_TEMPLATE = 'gravity/advanced/template';
 
     /**
      * Path to store config use bulk recommendation
      *
      * @var string
      */
-    const XML_PATH_USE_BULK = 'gravity/config/bulk';
+    const XML_PATH_USE_BULK = 'gravity/advanced/bulk';
 
     /**
      * Path to store config catalog export all
@@ -139,7 +139,7 @@ class Me_Gravity_Helper_Data extends Mage_Core_Helper_Data
      *
      * @var string
      */
-    const XML_PATH_EXPORT_CATALOG_ADDITIONAL = 'gravity/export/additional';
+    const XML_PATH_EXPORT_CATALOG_ADDITIONAL = 'gravity/sync/additional';
 
     /**
      * Path to store config additional customer attributes for export
@@ -153,7 +153,7 @@ class Me_Gravity_Helper_Data extends Mage_Core_Helper_Data
      *
      * @var string
      */
-    const XML_PATH_EXPORT_ONLY_SALABLE = 'gravity/export/only_salable';
+    const XML_PATH_EXPORT_ONLY_SALABLE = 'gravity/sync/only_salable';
 
     /**
      * Path to store config product status parameter for export
@@ -445,7 +445,7 @@ class Me_Gravity_Helper_Data extends Mage_Core_Helper_Data
      */
     public function useGravityTemplate($store = null)
     {
-        return Mage::getStoreConfigFlag(self::XML_PATH_USE_TEMPLATE, $store);
+        return 0;
     }
 
     /**

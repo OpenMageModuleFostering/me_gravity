@@ -41,6 +41,7 @@ class Me_Gravity_Model_Method_Request extends Me_Gravity_Model_Method_Abstract
      * Update / add event type
      */
     const EVENT_TYPE_UPDATE = 'UPDATE';
+	
 
     /**
      * Event type customer update
@@ -160,6 +161,8 @@ class Me_Gravity_Model_Method_Request extends Me_Gravity_Model_Method_Abstract
      *
      * @return void
      */
+	 
+	 
     public function _construct()
     {
         parent::_construct();
@@ -364,7 +367,23 @@ class Me_Gravity_Model_Method_Request extends Me_Gravity_Model_Method_Abstract
         if ($this->_helper->getDebugMode()) {
             $this->_helper->getLogger($params);
         }
-
+		$collection = Mage::getResourceModel('catalog/category_collection')
+                ->setStoreId($this->_storeId)
+                ->addNameToResult();
+		$layer = Mage::getSingleton('catalog/layer');
+		if(isset($layer)){
+			$_category = $layer->getCurrentCategory();
+			$currentCategoryId= $_category->getId();
+			$_cat = Mage::getModel('catalog/category')->load($currentCategoryId);
+			$structure = preg_split('#/+#', $_cat->getPath());
+			for($j=0; $j<count($structure); $j=$j+1){
+				$structure[$j]=$collection->getItemById($structure[$j])->getName();
+			}
+			$currentCategoryPath = implode("/", $structure);
+		}else{
+			$currentCategoryId='';
+			$currentCategoryPath='';
+		}
         $userId = $this->_getCustomerId();
         $cookieId = $this->_gravityCookie;
         $recommendationContext = new GravityRecommendationContext();
@@ -377,10 +396,12 @@ class Me_Gravity_Model_Method_Request extends Me_Gravity_Model_Method_Abstract
         }
 
         $storeValue = new GravityNameValue('storeId', $this->_storeId);
-        $recommendationContext->nameValues = array($storeValue);
+        $categoryId = new GravityNameValue('categoryId', $currentCategoryId);
+		$categoryPath = new GravityNameValue('categoryPath', $currentCategoryPath);
+        $recommendationContext->nameValues = array($storeValue,$categoryId,$categoryPath);
 
         if (isset($params['itemId']) && $params['itemId']) {
-            $pageItemId = new GravityNameValue('currentItemId', $params['itemId']);
+            $pageItemId = new GravityNameValue('itemId', $params['itemId']);
             $recommendationContext->nameValues = array_merge(array($pageItemId), $recommendationContext->nameValues);
         }
 
@@ -440,7 +461,23 @@ class Me_Gravity_Model_Method_Request extends Me_Gravity_Model_Method_Abstract
         if ($this->_helper->getDebugMode()) {
             $this->_helper->getLogger($params);
         }
-
+		$collection = Mage::getResourceModel('catalog/category_collection')
+                ->setStoreId($this->_storeId)
+                ->addNameToResult();
+		$layer = Mage::getSingleton('catalog/layer');
+		if(isset($layer)){
+			$_category = $layer->getCurrentCategory();
+			$currentCategoryId= $_category->getId();
+			$_cat = Mage::getModel('catalog/category')->load($currentCategoryId);
+			$structure = preg_split('#/+#', $_cat->getPath());
+			for($j=0; $j<count($structure); $j=$j+1){
+				$structure[$j]=$collection->getItemById($structure[$j])->getName();
+			}
+			$currentCategoryPath = implode("/", $structure);
+		}else{
+			$currentCategoryId='';
+			$currentCategoryPath='';
+		}
         $recommendationContextArray = array();
         $userId = $this->_getCustomerId();
         $cookieId = $this->_gravityCookie;
@@ -462,10 +499,12 @@ class Me_Gravity_Model_Method_Request extends Me_Gravity_Model_Method_Abstract
             }
 
             $storeValue = new GravityNameValue('storeId', $this->_storeId);
-            $recommendationContext->nameValues = array($storeValue);
+			$categoryId = new GravityNameValue('categoryId', $currentCategoryId);
+			$categoryPath = new GravityNameValue('categoryPath', $currentCategoryPath);
+            $recommendationContext->nameValues = array($storeValue,$categoryId,$categoryPath);
 
             if (isset($param['itemId']) && $param['itemId']) {
-                $pageItemId = new GravityNameValue('currentItemId', $param['itemId']);
+                $pageItemId = new GravityNameValue('itemId', $param['itemId']);
                 $recommendationContext->nameValues = array_merge(array($pageItemId), $recommendationContext->nameValues);
             }
 
@@ -542,7 +581,7 @@ class Me_Gravity_Model_Method_Request extends Me_Gravity_Model_Method_Abstract
                         $item = new GravityItem();
                         $item->itemId = $params['itemid'];
 			if ($params['storeId'] == 1) {
-                        	$item->title = $params['title'];
+                        //	$item->title = $params['title'];
 			}
                         $item->hidden = $params['hidden'];
                         if ($this->_canDebugLog) {
@@ -552,20 +591,27 @@ class Me_Gravity_Model_Method_Request extends Me_Gravity_Model_Method_Abstract
                         unset($params['type']);
                         unset($params['itemid']);
                         unset($params['hidden']);
+						
 			//$item->nameValues[] = new GravityNameValue("log", "".var_export($params,true));
                         foreach ($params as $attribute => $value) {
                             if ($value) {
                                 //$item->nameValues[] = new GravityNameValue($attribute, $value);
         			//foreach ($stores as $store) {
 				if ($params['storeId'] != 0) {
-					$item->nameValues[] = new GravityNameValue($attribute."_".$params['storeId'], $value);
+					foreach($value as $val){
+					array_push($item->nameValues, new GravityNameValue($attribute, $val));
+					}
+					//$item->nameValues[] = new GravityNameValue($attribute, $value);
 				} else {
-                                	$item->nameValues[] = new GravityNameValue($attribute, $value);
+                                	//$item->nameValues[] = new GravityNameValue($attribute, $value);
+									foreach($value as $val){
+									array_push($item->nameValues, new GravityNameValue($attribute, $val));
+									}
 				}
                             }
                         }
                         $isAsync = true;
-                        $result = $client->updateItem($item, $isAsync);
+                        $result = $client->addItem($item, $isAsync);
 
                     } else {
                         Mage::throwException($this->_helper->__('Invalid ' . $params['type'] . ' parameters'));

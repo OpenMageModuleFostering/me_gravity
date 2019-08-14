@@ -25,13 +25,16 @@ class Me_Gravity_Model_System_Config_Source_Layout_Pages
         $options = array();
 
         $_helper = $this->_getGravityHelper();
-        $options[] = array('label' => '', 'value' => '');
-        $options = array_merge($options, Mage::getSingleton('adminhtml/system_config_source_cms_page')->toOptionArray());
-        $additionalOptions = array(
+      //  $options[] = array('label' => '', 'value' => '');
+       // $options = array_merge($options, Mage::getSingleton('adminhtml/system_config_source_cms_page')->toOptionArray());
+        $options = array(
+			array('value' => 'cms_index_index', 'label'=> $_helper->__('Home')),
             array('value' => 'customer_account_index', 'label'=> $_helper->__('Account Dashboard')),
-            array('value' => 'contacts_index_index', 'label'=> $_helper->__('Contact Us'))
+            array('value' => 'contacts_index_index', 'label'=> $_helper->__('Contact Us')),
+			array('value' => 'cms_index_noRoute', 'label'=> $_helper->__('404 Not Found'))
+			
+			
         );
-        $options = array_merge($options, $additionalOptions);
 
         return $options;
     }

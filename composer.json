@@ -1,18 +1,5 @@
 {
-    "name": "OpenMageModuleFostering/Me_Gravity",
-    "type": "magento-module",
-    "license": "Gravity-R&D,-Ltd.",
-    "homepage": "",
-    "description": "The Yusp Recommendation extension provides an
-interface between Magento and the Yusp recommendation service. The
-communication is based on the Yusp PHP or Javascript API.",
-    "authors": [
-    {
-        "name": "Gravity Recommendations",
-        "email": "web-integration@gravityrd.com"
-    }
-],
-    "suggest": {
-        "magento-hackathon/magento-composer-installer": "*"
-    }
+    "keywords": [
+        "openmage-module"
+    ]
 }
